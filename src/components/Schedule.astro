@@ -112,18 +112,19 @@ const jsonLd = {
       </div>
     </div>
     
-    <ul class="space-y-8 sm:space-y-12">
+    <ul class="space-y-6 sm:space-y-8">
       {gatherings.map((gathering, index) => (
-        <li class="gathering-item reveal">
-          <div class="text-center">
-            <div class="text-wmg-gold text-lg sm:text-xl font-medium mb-3 sm:mb-4">
+        <li class="gathering-item reveal flex items-start">
+          <div class="w-1 bg-wmg-gold mr-4 sm:mr-6 flex-shrink-0 mt-1"></div>
+          <div class="flex-1">
+            <div class="text-wmg-gold text-sm sm:text-base font-semibold mb-2">
               {new Date(gathering.date).toLocaleDateString('en-US', { 
                 month: 'long', 
                 day: 'numeric',
                 year: 'numeric'
               })}
             </div>
-            <h3 class="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-wmg-text leading-tight">
+            <h3 class="text-lg sm:text-xl md:text-2xl font-bold text-wmg-text leading-tight">
               {gathering.title}
             </h3>
           </div>
