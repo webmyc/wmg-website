@@ -145,36 +145,44 @@ const jsonLd = {
     function updateTimeDisplay() {
       const now = new Date();
       
-      // Convert UTC meeting time to user's local timezone
-      const meetingStartUTC = new Date('2025-10-28T16:00:00Z');
-      const meetingEndUTC = new Date('2025-10-28T17:30:00Z');
+      // Create meeting times as UTC dates
+      const meetingStartUTC = new Date('2025-10-28T16:00:00.000Z');
+      const meetingEndUTC = new Date('2025-10-28T17:30:00.000Z');
       
-      // Format times in user's local timezone (24-hour format)
-      const localStartTime = meetingStartUTC.toLocaleTimeString('en-US', {
+      // Convert to user's local time by using the Date constructor
+      // This automatically handles timezone conversion
+      const localStartTime = new Date(meetingStartUTC).toLocaleTimeString('en-US', {
         hour: '2-digit',
         minute: '2-digit',
-        hour12: false,
-        timeZone: 'local'
+        hour12: false
       });
       
-      const localEndTime = meetingEndUTC.toLocaleTimeString('en-US', {
+      const localEndTime = new Date(meetingEndUTC).toLocaleTimeString('en-US', {
         hour: '2-digit',
         minute: '2-digit',
-        hour12: false,
-        timeZone: 'local'
+        hour12: false
       });
       
-      const localDateString = meetingStartUTC.toLocaleDateString('en-US', {
+      const localDateString = new Date(meetingStartUTC).toLocaleDateString('en-US', {
         weekday: 'short',
         month: 'short',
         day: 'numeric',
-        year: 'numeric',
-        timeZone: 'local'
+        year: 'numeric'
       });
       
       // Update local time display
       const localTimeElement = document.getElementById('local-time');
       const localDateElement = document.getElementById('local-date');
+      
+      console.log('Local time calculation:', {
+        localStartTime,
+        localEndTime,
+        localDateString,
+        elementsFound: {
+          localTimeElement: !!localTimeElement,
+          localDateElement: !!localDateElement
+        }
+      });
       
       if (localTimeElement) {
         localTimeElement.textContent = `${localStartTime} - ${localEndTime}`;
