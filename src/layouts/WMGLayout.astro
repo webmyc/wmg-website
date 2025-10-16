@@ -10,7 +10,7 @@ export interface Props {
 const {
   title = "The Whole Men Gathering - Gene Keys Community for Men",
   description = "Join a global community of men exploring ancient, contemporary and emergent wisdom through the Gene Keys Noble Code. Monthly gatherings every last Tuesday.",
-  image = "/og/wmg-hero.jpg",
+  image = "https://whole-men-gathering.vercel.app/og/wmg-hero.jpg",
   canonical = Astro.url.href
 } = Astro.props;
 
@@ -25,9 +25,9 @@ const jsonLd = {
       "url": "https://wholemengathering.org",
       "logo": {
         "@type": "ImageObject",
-        "url": "/og/wmg-hero.jpg"
+        "url": "https://whole-men-gathering.vercel.app/og/wmg-hero.jpg"
       },
-      "image": "/og/wmg-hero.jpg",
+      "image": "https://whole-men-gathering.vercel.app/og/wmg-hero.jpg",
       "sameAs": [],
       "contactPoint": {
         "@type": "ContactPoint",
