@@ -68,21 +68,21 @@ const jsonLd = {
   <!-- Gradient mesh overlay -->
   <div class="absolute inset-0 bg-gradient-to-br from-transparent via-wmg-gold/[0.015] to-transparent"></div>
   
-  <div class="relative max-w-4xl mx-auto">
-    <h2 id="gatherings" class="text-3xl md:text-4xl lg:text-5xl font-bold text-wmg-text mb-6 text-center section-title">
+  <div class="relative max-w-4xl mx-auto px-4 sm:px-6">
+    <h2 id="gatherings" class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-wmg-text mb-4 sm:mb-6 text-center section-title">
       Explore and join our next meetings
     </h2>
     
-    <p class="text-xl md:text-2xl text-wmg-text/80 mb-12 text-center section-subtitle">
+    <p class="text-lg sm:text-xl md:text-2xl text-wmg-text/80 mb-8 sm:mb-12 text-center section-subtitle">
       every last tuesday of the month, 4:00 - 5:30 pm UTC.
     </p>
     
-    <ul class="space-y-8">
+    <ul class="space-y-6 sm:space-y-8">
       {gatherings.map((gathering, index) => (
-        <li class={`gathering-item gathering-${index + 1} border-l-4 border-wmg-gold pl-6 py-4`}>
+        <li class={`gathering-item gathering-${index + 1} border-l-4 border-wmg-gold pl-4 sm:pl-6 py-3 sm:py-4`}>
           <time 
             datetime={`${gathering.date}T${gathering.time}:00+00:00`}
-            class="block text-lg md:text-xl font-semibold text-wmg-gold mb-2"
+            class="block text-base sm:text-lg md:text-xl font-semibold text-wmg-gold mb-2"
           >
             {new Date(gathering.date).toLocaleDateString('en-US', { 
               month: 'long', 
@@ -90,7 +90,7 @@ const jsonLd = {
               year: 'numeric'
             })}
           </time>
-          <h3 class="text-xl md:text-2xl lg:text-3xl text-wmg-text leading-relaxed">
+          <h3 class="text-lg sm:text-xl md:text-2xl lg:text-3xl text-wmg-text leading-relaxed">
             {gathering.title}
           </h3>
         </li>
