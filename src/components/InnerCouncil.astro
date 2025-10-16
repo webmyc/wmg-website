@@ -43,8 +43,22 @@ const councilMembers = [
 ---
 
 <section aria-labelledby="council" class="relative py-20 px-6 bg-wmg-bg overflow-hidden">
+  <!-- Background image -->
+  <div class="absolute inset-0">
+    <img 
+      src="/img/pexels-pixabay-301378.jpg" 
+      alt="Wooden background texture" 
+      class="w-full h-full object-cover"
+      loading="lazy"
+    />
+    <!-- Dark overlay for text readability -->
+    <div class="absolute inset-0 bg-black/60"></div>
+    <!-- Additional gradient overlay -->
+    <div class="absolute inset-0 bg-gradient-to-br from-black/40 via-black/50 to-black/70"></div>
+  </div>
+  
   <!-- Organic background shading -->
-  <div class="absolute inset-0 bg-gradient-to-br from-wmg-bg via-wmg-bg/95 to-wmg-bg/90"></div>
+  <div class="absolute inset-0 bg-gradient-to-br from-wmg-bg/20 via-wmg-bg/30 to-wmg-bg/40"></div>
   
   <!-- Animated gradient orbs -->
   <div class="absolute top-0 right-1/3 w-80 h-80 bg-gradient-radial from-wmg-gold/7 via-wmg-gold/3 to-transparent rounded-full blur-3xl animate-float"></div>
@@ -66,7 +80,7 @@ const councilMembers = [
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
       {councilMembers.map((member, index) => (
         <div class={`council-member council-member-${index + 1} text-center`}>
-          <div class="relative mb-6">
+          <div class="relative mb-6 carved-wood-effect">
             <img
               src={member.image}
               alt={`${member.name} - WMG Inner Council`}
@@ -160,6 +174,19 @@ const councilMembers = [
     background-image: 
       radial-gradient(circle at 1px 1px, rgba(255,255,255,0.15) 1px, transparent 0);
     background-size: 20px 20px;
+  }
+  
+  /* Carved wood effect for images */
+  .carved-wood-effect {
+    box-shadow: 
+      inset 8px 8px 16px rgba(0, 0, 0, 0.3),
+      inset -4px -4px 8px rgba(255, 255, 255, 0.1),
+      0 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 0.5rem;
+  }
+  
+  .carved-wood-effect img {
+    border-radius: 0.5rem;
   }
   
   @keyframes floatSlow {
