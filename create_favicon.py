@@ -74,3 +74,4 @@ if __name__ == "__main__":
         exit(1)
     
     create_favicon_from_logo(input_path)
+

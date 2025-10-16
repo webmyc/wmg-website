@@ -72,3 +72,4 @@ if __name__ == "__main__":
     
     create_transparent_logo(input_path, output_path)
     print("✅ Logo processing complete!")
+

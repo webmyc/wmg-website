@@ -63,3 +63,4 @@ if __name__ == "__main__":
         exit(1)
     
     create_transparent_logo(input_path, output_path)
+

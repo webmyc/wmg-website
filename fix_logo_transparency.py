@@ -57,3 +57,4 @@ def fix_logo_transparency():
 
 if __name__ == "__main__":
     fix_logo_transparency()
+
