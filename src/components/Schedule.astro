@@ -149,27 +149,20 @@ const jsonLd = {
       const meetingStartUTC = new Date('2025-10-28T16:00:00.000Z');
       const meetingEndUTC = new Date('2025-10-28T17:30:00.000Z');
       
-      // Get user's timezone offset in minutes
-      const timezoneOffset = now.getTimezoneOffset();
-      
-      // Convert UTC times to local times by adjusting for timezone offset
-      const localStartTime = new Date(meetingStartUTC.getTime() - (timezoneOffset * 60000));
-      const localEndTime = new Date(meetingEndUTC.getTime() - (timezoneOffset * 60000));
-      
-      // Format the local times
-      const localStartTimeString = localStartTime.toLocaleTimeString('en-US', {
+      // Simply use toLocaleTimeString on the UTC dates - JavaScript handles timezone conversion automatically
+      const localStartTimeString = meetingStartUTC.toLocaleTimeString('en-US', {
         hour: '2-digit',
         minute: '2-digit',
         hour12: false
       });
       
-      const localEndTimeString = localEndTime.toLocaleTimeString('en-US', {
+      const localEndTimeString = meetingEndUTC.toLocaleTimeString('en-US', {
         hour: '2-digit',
         minute: '2-digit',
         hour12: false
       });
       
-      const localDateString = localStartTime.toLocaleDateString('en-US', {
+      const localDateString = meetingStartUTC.toLocaleDateString('en-US', {
         weekday: 'short',
         month: 'short',
         day: 'numeric',
@@ -181,11 +174,11 @@ const jsonLd = {
       const localDateElement = document.getElementById('local-date');
       
       console.log('Timezone conversion:', {
-        timezoneOffset,
+        utcTime: '16:00-17:30',
         localStartTimeString,
         localEndTimeString,
         localDateString,
-        utcTime: '16:00-17:30',
+        userTimezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
         elementsFound: {
           localTimeElement: !!localTimeElement,
           localDateElement: !!localDateElement

@@ -59,6 +59,16 @@ import AudioToggle from './AudioToggle.astro';
 
       <!-- Content overlay -->
       <div class="relative z-10 text-center px-4 sm:px-6 max-w-4xl mx-auto">
+        <!-- Logo -->
+        <div class="mb-6 sm:mb-8 hero-logo">
+          <img
+            src="/logo.png"
+            alt="The Whole Men Gathering Logo"
+            class="w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 mx-auto opacity-90 hover:opacity-100 transition-opacity duration-300"
+            loading="eager"
+          />
+        </div>
+
         <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-wmg-text mb-4 sm:mb-6 leading-tight hero-title">
           The Whole Men Gathering
         </h1>
@@ -97,12 +107,18 @@ import AudioToggle from './AudioToggle.astro';
     </section>
 
 <style>
-  /* Organic hero animations */
-  .hero-title {
-    opacity: 0;
-    transform: translateY(30px) scale(0.95);
-    animation: heroTitleReveal 1.2s ease-out 0.3s forwards;
-  }
+      /* Organic hero animations */
+      .hero-logo {
+        opacity: 0;
+        transform: translateY(20px) scale(0.9);
+        animation: heroLogoReveal 1s ease-out 0.1s forwards;
+      }
+
+      .hero-title {
+        opacity: 0;
+        transform: translateY(30px) scale(0.95);
+        animation: heroTitleReveal 1.2s ease-out 0.3s forwards;
+      }
   
   .hero-subtitle {
     opacity: 0;
@@ -122,12 +138,19 @@ import AudioToggle from './AudioToggle.astro';
     animation: heroCTAReveal 0.8s ease-out 1.6s forwards;
   }
   
-  @keyframes heroTitleReveal {
-    to {
-      opacity: 1;
-      transform: translateY(0) scale(1);
-    }
-  }
+      @keyframes heroLogoReveal {
+        to {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+      }
+
+      @keyframes heroTitleReveal {
+        to {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+      }
   
   @keyframes heroSubtitleReveal {
     to {
@@ -193,14 +216,15 @@ import AudioToggle from './AudioToggle.astro';
       animation: none;
     }
     
-    .hero-title,
-    .hero-subtitle,
-    .hero-description,
-    .hero-cta {
-      animation: none;
-      opacity: 1;
-      transform: none;
-    }
+        .hero-logo,
+        .hero-title,
+        .hero-subtitle,
+        .hero-description,
+        .hero-cta {
+          animation: none;
+          opacity: 1;
+          transform: none;
+        }
   }
   
   /* Smooth scroll behavior for anchor links */
