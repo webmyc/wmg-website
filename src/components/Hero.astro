@@ -1,5 +1,6 @@
 ---
-// Hero component with noise animation and responsive background
+// Hero component with video background, noise animation, and organic load animations
+import AudioToggle from './AudioToggle.astro';
 ---
 
 <section class="relative min-h-screen flex items-center justify-center overflow-hidden bg-wmg-bg">
@@ -19,80 +20,131 @@
     <rect width="100%" height="100%" filter="url(#wmg-noise)" class="animate-grain" />
   </svg>
 
-  <!-- Background image -->
+  <!-- Background video -->
   <div class="absolute inset-0">
-    <picture>
-      <source 
-        media="(min-width: 1200px)" 
-        srcset="/hero/hero-2560.webp 2560w, /hero/hero-1920.webp 1920w"
-        type="image/webp"
-      />
-      <source 
-        media="(min-width: 768px)" 
-        srcset="/hero/hero-1600.webp 1600w"
-        type="image/webp"
-      />
-      <source 
-        media="(min-width: 1200px)" 
-        srcset="/hero/hero-2560.jpg 2560w, /hero/hero-1920.jpg 1920w"
-        type="image/jpeg"
-      />
-      <source 
-        media="(min-width: 768px)" 
-        srcset="/hero/hero-1600.jpg 1600w"
-        type="image/jpeg"
-      />
+    <video 
+      autoplay 
+      muted 
+      loop 
+      playsinline
+      class="w-full h-full object-cover"
+      poster="/hero/hero-1920.jpg"
+    >
+      <source src="/video/hero-bg.mp4" type="video/mp4">
+      <!-- Fallback image -->
       <img 
-        src="/hero/hero-1600.jpg" 
+        src="/hero/hero-1920.jpg" 
         alt="The Whole Men Gathering background" 
         class="w-full h-full object-cover"
         loading="eager"
       />
-    </picture>
+    </video>
     
-    <!-- Copyright notice -->
-    <div class="absolute bottom-4 right-4 text-wmg-text/60 text-xs">
-      Photo by 
-      <a 
-        href="https://www.pexels.com/photo/silhouette-photography-of-people-during-golden-hour-2935914/" 
-        target="_blank" 
-        rel="noopener noreferrer"
-        class="text-wmg-text/80 hover:text-wmg-gold transition-colors underline"
-      >
-        Jeff C
-      </a>
-      on Pexels
-    </div>
+    <!-- Dark gradient overlay for text readability -->
+    <div class="absolute inset-0 bg-gradient-to-b from-black/40 via-black/60 to-black/80"></div>
+    
+    <!-- Subtle vignette effect -->
+    <div class="absolute inset-0 bg-radial-gradient from-transparent via-transparent to-black/30"></div>
   </div>
 
   <!-- Content overlay -->
   <div class="relative z-10 text-center px-6 max-w-4xl mx-auto">
-    <h1 class="text-4xl md:text-6xl lg:text-7xl font-bold text-wmg-text mb-6 leading-tight">
+    <h1 class="text-4xl md:text-6xl lg:text-7xl font-bold text-wmg-text mb-6 leading-tight hero-title">
       The Whole Men Gathering
     </h1>
     
-    <p class="text-xl md:text-2xl lg:text-3xl text-wmg-text mb-8 max-w-3xl mx-auto leading-relaxed">
+    <p class="text-xl md:text-2xl lg:text-3xl text-wmg-text mb-8 max-w-3xl mx-auto leading-relaxed hero-subtitle">
       Weaving together ancient, contemporary and emergent wisdom approaches for a manhood rooted in service to the whole.
     </p>
     
-    <p class="text-lg md:text-xl text-wmg-text/90 mb-10 max-w-2xl mx-auto leading-relaxed">
+    <p class="text-lg md:text-xl text-wmg-text/90 mb-10 max-w-2xl mx-auto leading-relaxed hero-description">
       We invite you to take part in a global community based on the Gene Keys Noble Code, open to all men—no matter your level of Gene Keys experience.
     </p>
     
     <a 
       href="#signup" 
-      class="inline-block bg-wmg-gold text-wmg-bg px-8 py-4 text-lg font-semibold rounded-lg hover:bg-wmg-gold/90 focus:outline-none focus:ring-4 focus:ring-wmg-gold/50 transition-all duration-300 transform hover:scale-105"
+      class="inline-block bg-wmg-gold text-wmg-bg px-8 py-4 text-lg font-semibold rounded-lg hover:bg-wmg-gold/90 focus:outline-none focus:ring-4 focus:ring-wmg-gold/50 transition-all duration-300 transform hover:scale-105 hero-cta"
     >
       Join the Gathering
     </a>
   </div>
+  
+  <!-- Audio Toggle -->
+  <AudioToggle />
 </section>
 
 <style>
+  /* Organic hero animations */
+  .hero-title {
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+    animation: heroTitleReveal 1.2s ease-out 0.3s forwards;
+  }
+  
+  .hero-subtitle {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: heroSubtitleReveal 1s ease-out 0.8s forwards;
+  }
+  
+  .hero-description {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: heroDescriptionReveal 1s ease-out 1.2s forwards;
+  }
+  
+  .hero-cta {
+    opacity: 0;
+    transform: translateY(20px) scale(0.9);
+    animation: heroCTAReveal 0.8s ease-out 1.6s forwards;
+  }
+  
+  @keyframes heroTitleReveal {
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+  
+  @keyframes heroSubtitleReveal {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes heroDescriptionReveal {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes heroCTAReveal {
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+  
+  /* Radial gradient utility */
+  .bg-radial-gradient {
+    background: radial-gradient(circle at center, var(--tw-gradient-stops));
+  }
+  
   /* Ensure noise animation respects reduced motion */
   @media (prefers-reduced-motion: reduce) {
     .animate-grain {
       animation: none;
+    }
+    
+    .hero-title,
+    .hero-subtitle,
+    .hero-description,
+    .hero-cta {
+      animation: none;
+      opacity: 1;
+      transform: none;
     }
   }
   

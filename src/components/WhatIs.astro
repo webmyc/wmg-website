@@ -1,23 +1,28 @@
 ---
-// WhatIs component explaining WMG
+// WhatIs component explaining WMG with organic animations and shading
 ---
 
-<section aria-labelledby="what-is" class="py-20 px-6 bg-wmg-bg">
-  <div class="max-w-4xl mx-auto">
-    <h2 id="what-is" class="text-3xl md:text-4xl lg:text-5xl font-bold text-wmg-text mb-12 text-center fade-up">
+<section aria-labelledby="what-is" class="relative py-20 px-6 bg-wmg-bg overflow-hidden">
+  <!-- Organic background shading -->
+  <div class="absolute inset-0 bg-gradient-to-br from-wmg-bg via-wmg-bg/95 to-wmg-bg/90"></div>
+  <div class="absolute top-0 left-1/4 w-96 h-96 bg-wmg-gold/5 rounded-full blur-3xl animate-float"></div>
+  <div class="absolute bottom-0 right-1/4 w-80 h-80 bg-wmg-gold/3 rounded-full blur-3xl animate-float-delayed"></div>
+  
+  <div class="relative max-w-4xl mx-auto">
+    <h2 id="what-is" class="text-3xl md:text-4xl lg:text-5xl font-bold text-wmg-text mb-12 text-center section-title">
       What is Whole Men Gathering?
     </h2>
     
     <div class="space-y-8 text-lg md:text-xl text-wmg-text/90 leading-relaxed">
-      <p class="fade-up">
+      <p class="section-paragraph paragraph-1">
         WMG is an online community for men to explore ancient, contemporary and emergent wisdom inspired by the Gene Keys teaching, so we can empower each other to create profound transformation in our lives.
       </p>
       
-      <p class="fade-up">
+      <p class="section-paragraph paragraph-2">
         It's a space to connect with a brotherhood that recognizes the greatness hidden within each of us—an invitation to reclaim deeper purpose and meaning, and to let our unique genius flourish and transform our lives, our relationships, and the world around us.
       </p>
       
-      <p class="fade-up">
+      <p class="section-paragraph paragraph-3">
         Each month we dive into the sacred journey of being men in modern times and practice aligning with our wholeness—shadows, gifts and siddhis—in how we act, relate, serve and contribute to the harmony and prosperity of all.
       </p>
     </div>
@@ -25,14 +30,96 @@
 </section>
 
 <style>
-  .fade-up {
-    opacity: 0;
-    transform: translateY(20px);
-    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  /* Organic floating animations */
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0px) translateX(0px) scale(1);
+    }
+    33% {
+      transform: translateY(-20px) translateX(10px) scale(1.05);
+    }
+    66% {
+      transform: translateY(10px) translateX(-5px) scale(0.95);
+    }
   }
   
-  .fade-up.reveal {
+  @keyframes floatDelayed {
+    0%, 100% {
+      transform: translateY(0px) translateX(0px) scale(1);
+    }
+    33% {
+      transform: translateY(15px) translateX(-10px) scale(0.95);
+    }
+    66% {
+      transform: translateY(-10px) translateX(5px) scale(1.05);
+    }
+  }
+  
+  .animate-float {
+    animation: float 8s ease-in-out infinite;
+  }
+  
+  .animate-float-delayed {
+    animation: floatDelayed 10s ease-in-out infinite 2s;
+  }
+  
+  /* Section animations */
+  .section-title {
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+    animation: sectionTitleReveal 1s ease-out 0.2s forwards;
+  }
+  
+  .section-paragraph {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.6s ease-out;
+  }
+  
+  .paragraph-1 {
+    animation: paragraphReveal 0.8s ease-out 0.5s forwards;
+  }
+  
+  .paragraph-2 {
+    animation: paragraphReveal 0.8s ease-out 0.7s forwards;
+  }
+  
+  .paragraph-3 {
+    animation: paragraphReveal 0.8s ease-out 0.9s forwards;
+  }
+  
+  @keyframes sectionTitleReveal {
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+  
+  @keyframes paragraphReveal {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  /* Intersection observer animations */
+  .section-paragraph.reveal {
     opacity: 1;
     transform: translateY(0);
+  }
+  
+  /* Respect reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    .animate-float,
+    .animate-float-delayed {
+      animation: none;
+    }
+    
+    .section-title,
+    .section-paragraph {
+      animation: none;
+      opacity: 1;
+      transform: none;
+    }
   }
 </style>

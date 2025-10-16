@@ -53,19 +53,24 @@ const jsonLd = {
 };
 ---
 
-<section aria-labelledby="gatherings" class="py-20 px-6 bg-wmg-bg">
-  <div class="max-w-4xl mx-auto">
-    <h2 id="gatherings" class="text-3xl md:text-4xl lg:text-5xl font-bold text-wmg-text mb-6 text-center fade-up">
+<section aria-labelledby="gatherings" class="relative py-20 px-6 bg-wmg-bg overflow-hidden">
+  <!-- Organic background shading -->
+  <div class="absolute inset-0 bg-gradient-to-tl from-wmg-bg via-wmg-bg/95 to-wmg-bg/90"></div>
+  <div class="absolute top-1/3 right-0 w-72 h-72 bg-wmg-gold/4 rounded-full blur-3xl animate-float"></div>
+  <div class="absolute bottom-1/4 left-0 w-64 h-64 bg-wmg-gold/6 rounded-full blur-3xl animate-float-delayed"></div>
+  
+  <div class="relative max-w-4xl mx-auto">
+    <h2 id="gatherings" class="text-3xl md:text-4xl lg:text-5xl font-bold text-wmg-text mb-6 text-center section-title">
       Gatherings
     </h2>
     
-    <p class="text-xl md:text-2xl text-wmg-text/80 mb-12 text-center fade-up">
+    <p class="text-xl md:text-2xl text-wmg-text/80 mb-12 text-center section-subtitle">
       Every last Tuesday of the month, 4:00–5:30 pm UTC
     </p>
     
     <ul class="space-y-8">
       {gatherings.map((gathering, index) => (
-        <li class="fade-up border-l-4 border-wmg-gold pl-6 py-4">
+        <li class={`gathering-item gathering-${index + 1} border-l-4 border-wmg-gold pl-6 py-4`}>
           <time 
             datetime={`${gathering.date}T${gathering.time}:00+00:00`}
             class="block text-lg md:text-xl font-semibold text-wmg-gold mb-2"
@@ -88,14 +93,108 @@ const jsonLd = {
 <script type="application/ld+json" set:html={JSON.stringify(jsonLd)}></script>
 
 <style>
-  .fade-up {
-    opacity: 0;
-    transform: translateY(20px);
-    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  /* Organic floating animations */
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0px) translateX(0px) scale(1);
+    }
+    33% {
+      transform: translateY(-20px) translateX(10px) scale(1.05);
+    }
+    66% {
+      transform: translateY(10px) translateX(-5px) scale(0.95);
+    }
   }
   
-  .fade-up.reveal {
-    opacity: 1;
-    transform: translateY(0);
+  @keyframes floatDelayed {
+    0%, 100% {
+      transform: translateY(0px) translateX(0px) scale(1);
+    }
+    33% {
+      transform: translateY(15px) translateX(-10px) scale(0.95);
+    }
+    66% {
+      transform: translateY(-10px) translateX(5px) scale(1.05);
+    }
+  }
+  
+  .animate-float {
+    animation: float 8s ease-in-out infinite;
+  }
+  
+  .animate-float-delayed {
+    animation: floatDelayed 10s ease-in-out infinite 2s;
+  }
+  
+  /* Section animations */
+  .section-title {
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+    animation: sectionTitleReveal 1s ease-out 0.2s forwards;
+  }
+  
+  .section-subtitle {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: sectionSubtitleReveal 0.8s ease-out 0.4s forwards;
+  }
+  
+  .gathering-item {
+    opacity: 0;
+    transform: translateX(-30px);
+    transition: all 0.6s ease-out;
+  }
+  
+  .gathering-1 {
+    animation: gatheringReveal 0.8s ease-out 0.6s forwards;
+  }
+  
+  .gathering-2 {
+    animation: gatheringReveal 0.8s ease-out 0.8s forwards;
+  }
+  
+  .gathering-3 {
+    animation: gatheringReveal 0.8s ease-out 1s forwards;
+  }
+  
+  .gathering-4 {
+    animation: gatheringReveal 0.8s ease-out 1.2s forwards;
+  }
+  
+  @keyframes sectionTitleReveal {
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+  
+  @keyframes sectionSubtitleReveal {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes gatheringReveal {
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+  
+  /* Respect reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    .animate-float,
+    .animate-float-delayed {
+      animation: none;
+    }
+    
+    .section-title,
+    .section-subtitle,
+    .gathering-item {
+      animation: none;
+      opacity: 1;
+      transform: none;
+    }
   }
 </style>

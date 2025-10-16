@@ -14,6 +14,8 @@ module.exports = {
       animation: {
         'grain': 'grain 8s steps(10) infinite',
         'fade-up': 'fadeUp 0.6s ease-out',
+        'float': 'float 8s ease-in-out infinite',
+        'float-delayed': 'floatDelayed 10s ease-in-out infinite 2s',
       },
       keyframes: {
         grain: {
@@ -31,6 +33,16 @@ module.exports = {
         fadeUp: {
           '0%': { opacity: '0', transform: 'translateY(20px)' },
           '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+        float: {
+          '0%, 100%': { transform: 'translateY(0px) translateX(0px) scale(1)' },
+          '33%': { transform: 'translateY(-20px) translateX(10px) scale(1.05)' },
+          '66%': { transform: 'translateY(10px) translateX(-5px) scale(0.95)' },
+        },
+        floatDelayed: {
+          '0%, 100%': { transform: 'translateY(0px) translateX(0px) scale(1)' },
+          '33%': { transform: 'translateY(15px) translateX(-10px) scale(0.95)' },
+          '66%': { transform: 'translateY(-10px) translateX(5px) scale(1.05)' },
         },
       },
     },
