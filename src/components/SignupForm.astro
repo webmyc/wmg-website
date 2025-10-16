@@ -78,6 +78,8 @@
 </section>
 
 <script>
+  import { trackFormEvent, trackButtonClick } from '../lib/analytics.ts';
+  
   document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('signup-form') as HTMLFormElement;
     const submitBtn = document.getElementById('submit-btn') as HTMLButtonElement;
@@ -128,9 +130,25 @@
       }
     });
 
+    // Track form start when user begins typing
+    let formStarted = false;
+    [nameInput, emailInput].forEach(input => {
+      input.addEventListener('input', () => {
+        if (!formStarted) {
+          formStarted = true;
+          trackFormEvent('start', 'signup_form');
+        }
+      });
+    });
+
     form.addEventListener('submit', async function(e) {
       e.preventDefault();
       hideMessage();
+      
+      trackFormEvent('submit', 'signup_form', {
+        has_name: nameInput.value.trim().length > 0,
+        has_email: emailInput.value.trim().length > 0
+      });
 
       // Clear previous errors
       clearError(nameInput, nameError);
@@ -169,11 +187,13 @@
         if (response.ok) {
           showMessage('Welcome to the gathering! You\'ll receive the live link and updates soon.');
           form.reset();
+          trackFormEvent('submit', 'signup_form', { status: 'success' });
         } else {
           throw new Error('Form submission failed');
         }
       } catch (error) {
         showMessage('Something went wrong. Please try again.', true);
+        trackFormEvent('error', 'signup_form', { error: 'submission_failed' });
       } finally {
         // Reset button state
         submitBtn.disabled = false;

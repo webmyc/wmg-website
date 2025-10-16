@@ -27,6 +27,8 @@
 </audio>
 
 <script>
+  import { trackAudioEvent } from '../lib/analytics.ts';
+  
   document.addEventListener('DOMContentLoaded', function() {
     const audioToggle = document.getElementById('audio-toggle');
     const audioBtn = document.getElementById('audio-btn');
@@ -60,6 +62,7 @@
           localStorage.setItem('wmg-audio-consent', 'true');
           updateUI();
           showStatus('Audio On');
+          trackAudioEvent('play', 'background_music');
         }).catch((error) => {
           console.log('Audio play failed:', error);
           showStatus('Audio unavailable');
@@ -70,10 +73,12 @@
           backgroundAudio.pause();
           isPlaying = false;
           showStatus('Audio Off');
+          trackAudioEvent('pause', 'background_music');
         } else {
           backgroundAudio.play();
           isPlaying = true;
           showStatus('Audio On');
+          trackAudioEvent('play', 'background_music');
         }
         updateUI();
       }
@@ -101,6 +106,7 @@
           isPlaying = true;
           hasInteracted = true;
           updateUI();
+          trackAudioEvent('play', 'background_music_auto');
         }).catch((error) => {
           console.log('Auto-play failed:', error);
         });

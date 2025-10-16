@@ -156,9 +156,14 @@ const jsonLd = {
   <body class="bg-wmg-bg text-wmg-text antialiased">
     <slot />
     
-    <!-- Initialize animations -->
+    <!-- Initialize animations and analytics -->
     <script>
       import('/src/lib/animate.ts');
+      import('/src/lib/pageAnalytics.ts').then(module => {
+        if (module.initPageAnalytics) {
+          module.initPageAnalytics();
+        }
+      });
     </script>
   </body>
 </html>

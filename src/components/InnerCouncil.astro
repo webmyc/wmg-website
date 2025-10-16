@@ -77,7 +77,8 @@ const councilMembers = [
           <div class="flex justify-center space-x-4">
             <a 
               href={member.website}
-              class="text-wmg-gold hover:text-wmg-gold/80 transition-colors"
+              class="text-wmg-gold hover:text-wmg-gold/80 transition-colors council-website-link"
+              data-member={member.name}
               aria-label={`Visit ${member.name}'s website`}
             >
               <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
@@ -86,7 +87,8 @@ const councilMembers = [
             </a>
             <a 
               href={member.instagram}
-              class="text-wmg-gold hover:text-wmg-gold/80 transition-colors"
+              class="text-wmg-gold hover:text-wmg-gold/80 transition-colors council-instagram-link"
+              data-member={member.name}
               aria-label={`Follow ${member.name} on Instagram`}
             >
               <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -192,3 +194,50 @@ const councilMembers = [
     }
   }
 </style>
+
+<script>
+  import { trackCouncilInteraction, trackLinkClick } from '../lib/analytics.ts';
+  
+  document.addEventListener('DOMContentLoaded', function() {
+    // Track council member interactions
+    const councilMembers = document.querySelectorAll('.council-member');
+    councilMembers.forEach((member, index) => {
+      // Track when council member comes into view
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const memberName = member.querySelector('h3')?.textContent || `Member ${index + 1}`;
+            trackCouncilInteraction(memberName, 'view');
+            observer.disconnect(); // Only track once
+          }
+        });
+      }, { threshold: 0.5 });
+      
+      observer.observe(member);
+    });
+    
+    // Track website link clicks
+    const websiteLinks = document.querySelectorAll('.council-website-link');
+    websiteLinks.forEach(link => {
+      link.addEventListener('click', (e) => {
+        const memberName = link.getAttribute('data-member');
+        if (memberName) {
+          trackCouncilInteraction(memberName, 'website_click');
+          trackLinkClick(`${memberName} Website`, link.getAttribute('href') || '', 'council');
+        }
+      });
+    });
+    
+    // Track Instagram link clicks
+    const instagramLinks = document.querySelectorAll('.council-instagram-link');
+    instagramLinks.forEach(link => {
+      link.addEventListener('click', (e) => {
+        const memberName = link.getAttribute('data-member');
+        if (memberName) {
+          trackCouncilInteraction(memberName, 'instagram_click');
+          trackLinkClick(`${memberName} Instagram`, link.getAttribute('href') || '', 'council');
+        }
+      });
+    });
+  });
+</script>

@@ -63,6 +63,7 @@ import AudioToggle from './AudioToggle.astro';
     
     <a 
       href="#signup" 
+      id="hero-cta"
       class="inline-block bg-wmg-gold text-wmg-bg px-8 py-4 text-lg font-semibold rounded-lg hover:bg-wmg-gold/90 focus:outline-none focus:ring-4 focus:ring-wmg-gold/50 transition-all duration-300 transform hover:scale-105 hero-cta"
     >
       Join the Gathering
@@ -159,3 +160,48 @@ import AudioToggle from './AudioToggle.astro';
     }
   }
 </style>
+
+<script>
+  import { trackButtonClick, trackVideoEvent } from '../lib/analytics.ts';
+  
+  document.addEventListener('DOMContentLoaded', function() {
+    // Track hero CTA click
+    const heroCTA = document.getElementById('hero-cta');
+    if (heroCTA) {
+      heroCTA.addEventListener('click', () => {
+        trackButtonClick('join_gathering', 'hero');
+      });
+    }
+    
+    // Track video events
+    const heroVideo = document.querySelector('video');
+    if (heroVideo) {
+      heroVideo.addEventListener('play', () => {
+        trackVideoEvent('play', 'hero_background');
+      });
+      
+      heroVideo.addEventListener('pause', () => {
+        trackVideoEvent('pause', 'hero_background');
+      });
+      
+      heroVideo.addEventListener('error', () => {
+        trackVideoEvent('error', 'hero_background');
+      });
+    }
+    
+    // Track section view when hero comes into view
+    const heroSection = document.querySelector('section');
+    if (heroSection) {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            track('section_view', { section: 'hero' });
+            observer.disconnect(); // Only track once
+          }
+        });
+      }, { threshold: 0.5 });
+      
+      observer.observe(heroSection);
+    }
+  });
+</script>
