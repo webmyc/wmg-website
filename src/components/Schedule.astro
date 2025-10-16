@@ -73,9 +73,28 @@ const jsonLd = {
       Explore and join our next meetings
     </h2>
     
-    <p class="text-lg sm:text-xl md:text-2xl text-wmg-text/80 mb-8 sm:mb-12 text-center section-subtitle">
+    <p class="text-lg sm:text-xl md:text-2xl text-wmg-text/80 mb-6 sm:mb-8 text-center section-subtitle">
       every last tuesday of the month, 4:00 - 5:30 pm UTC.
     </p>
+    
+    <!-- Next Meeting Section -->
+    <div class="mb-8 sm:mb-12 text-center">
+      <h3 class="text-xl sm:text-2xl font-semibold text-wmg-gold mb-4">
+        Next meeting
+      </h3>
+      <div class="flex justify-center">
+        <span class="wtb-ew-v1" style="width: 100%; max-width: 560px; display:inline-block">
+          <script src="https://www.worldtimebuddy.com/event_widget.js?h=100&md=10/28/2025&mt=16.00&ml=1.50&sts=0&sln=0&wt=ew-ltc"></script>
+          <i style="color: #f5f5f0; font-size: 12px;">
+            <a target="_blank" href="https://www.worldtimebuddy.com/" style="color: #d4af37;">Time converter</a> at worldtimebuddy.com
+          </i>
+          <noscript>
+            <a href="https://www.worldtimebuddy.com/" style="color: #d4af37;">Time converter</a> at worldtimebuddy.com
+          </noscript>
+          <script>window[wtb_event_widgets.pop()].init()</script>
+        </span>
+      </div>
+    </div>
     
     <ul class="space-y-6 sm:space-y-8">
       {gatherings.map((gathering, index) => (
@@ -90,7 +109,7 @@ const jsonLd = {
               year: 'numeric'
             })}
           </time>
-          <h3 class="text-lg sm:text-xl md:text-2xl lg:text-3xl text-wmg-text leading-relaxed">
+          <h3 class="text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl text-wmg-text leading-relaxed">
             {gathering.title}
           </h3>
         </li>
@@ -183,6 +202,22 @@ const jsonLd = {
     opacity: 0;
     transform: translateX(-30px);
     transition: all 0.6s ease-out;
+  }
+  
+  /* Time widget styling */
+  .wtb-ew-v1 {
+    background: rgba(245, 245, 240, 0.1);
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    border-radius: 8px;
+    padding: 12px;
+  }
+  
+  .wtb-ew-v1 * {
+    color: #f5f5f0 !important;
+  }
+  
+  .wtb-ew-v1 a {
+    color: #d4af37 !important;
   }
   
   .gathering-1 {
