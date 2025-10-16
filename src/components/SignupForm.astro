@@ -2,18 +2,33 @@
 // SignupForm component with Formspree integration
 ---
 
-<section id="signup" aria-labelledby="join" class="py-16 sm:py-20 px-4 sm:px-6 bg-wmg-bg">
-  <div class="max-w-2xl mx-auto">
-    <h2 id="join" class="text-2xl sm:text-3xl md:text-4xl font-bold text-wmg-text mb-6 text-center fade-up">
+<section id="signup" aria-labelledby="join" class="relative py-20 sm:py-24 px-4 sm:px-6 bg-wmg-bg overflow-hidden">
+  <!-- Enhanced background with subtle effects -->
+  <div class="absolute inset-0">
+    <!-- Gradient overlay for depth -->
+    <div class="absolute inset-0 bg-gradient-to-br from-wmg-gold/[0.03] via-transparent to-wmg-gold/[0.05]"></div>
+    
+    <!-- Animated gradient orbs -->
+    <div class="absolute top-1/4 left-1/4 w-64 h-64 bg-gradient-radial from-wmg-gold/6 via-wmg-gold/3 to-transparent rounded-full blur-3xl animate-float"></div>
+    <div class="absolute bottom-1/3 right-1/4 w-48 h-48 bg-gradient-radial from-wmg-gold/4 via-wmg-gold/2 to-transparent rounded-full blur-2xl animate-float-delayed"></div>
+    
+    <!-- Subtle noise texture -->
+    <div class="absolute inset-0 opacity-[0.01] bg-noise-pattern"></div>
+  </div>
+  
+  <div class="relative max-w-2xl mx-auto">
+    <h2 id="join" class="text-2xl sm:text-3xl md:text-4xl font-bold text-wmg-text mb-8 sm:mb-10 text-center fade-up">
       Join our forming community and participate in the live online gatherings:
     </h2>
     
-    <form 
-      class="space-y-6 fade-up"
-      action={`https://formspree.io/f/${import.meta.env.PUBLIC_FORMSPREE_ID || 'your-formspree-id'}`}
-      method="POST"
-      id="signup-form"
-    >
+    <!-- Form container with subtle card effect -->
+    <div class="bg-wmg-bg/50 backdrop-blur-sm border border-wmg-gold/20 rounded-2xl p-6 sm:p-8 shadow-2xl shadow-wmg-gold/10 fade-up">
+      <form 
+        class="space-y-6"
+        action={`https://formspree.io/f/${import.meta.env.PUBLIC_FORMSPREE_ID || 'your-formspree-id'}`}
+        method="POST"
+        id="signup-form"
+      >
       <!-- Honeypot field -->
       <input 
         type="text" 
@@ -60,16 +75,28 @@
       
       <button
         type="submit"
-        class="w-full bg-wmg-gold text-wmg-bg px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg font-semibold rounded-lg hover:bg-wmg-gold/90 focus:outline-none focus:ring-4 focus:ring-wmg-gold/50 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px]"
+        class="w-full bg-gradient-to-r from-wmg-gold to-wmg-gold/90 text-wmg-bg px-6 sm:px-8 py-4 sm:py-5 text-base sm:text-lg font-bold rounded-xl hover:from-wmg-gold/90 hover:to-wmg-gold focus:outline-none focus:ring-4 focus:ring-wmg-gold/50 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed min-h-[48px] shadow-lg hover:shadow-xl hover:shadow-wmg-gold/25 transform hover:scale-[1.02] active:scale-[0.98]"
         id="submit-btn"
       >
-        <span id="submit-text">Join Us</span>
-        <span id="submit-loading" class="hidden">Joining...</span>
+        <span id="submit-text" class="flex items-center justify-center gap-2">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+          </svg>
+          Join Our Community
+        </span>
+        <span id="submit-loading" class="hidden flex items-center justify-center gap-2">
+          <svg class="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+          Joining...
+        </span>
       </button>
       
       <!-- Success/Error messages -->
       <div id="form-message" class="text-center mt-4 hidden" role="alert" aria-live="polite"></div>
-    </form>
+      </form>
+    </div>
   </div>
 </section>
 
@@ -210,5 +237,17 @@
   .fade-up.reveal {
     opacity: 1;
     transform: translateY(0);
+  }
+  
+  /* Gradient radial utility */
+  .bg-gradient-radial {
+    background: radial-gradient(circle at center, var(--tw-gradient-stops));
+  }
+  
+  /* Noise pattern background */
+  .bg-noise-pattern {
+    background-image: 
+      radial-gradient(circle at 1px 1px, rgba(255,255,255,0.15) 1px, transparent 0);
+    background-size: 20px 20px;
   }
 </style>
