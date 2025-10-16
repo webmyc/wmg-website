@@ -179,10 +179,29 @@ const councilMembers = [
   /* Carved wood effect for images */
   .carved-wood-effect {
     box-shadow: 
-      inset 8px 8px 16px rgba(0, 0, 0, 0.3),
-      inset -4px -4px 8px rgba(255, 255, 255, 0.1),
-      0 4px 8px rgba(0, 0, 0, 0.2);
+      inset 4px 4px 8px rgba(0, 0, 0, 0.3),
+      inset -2px -2px 4px rgba(255, 255, 255, 0.1),
+      0 2px 4px rgba(0, 0, 0, 0.2);
     border-radius: 0.5rem;
+  }
+  
+  /* Responsive carved wood effect */
+  @media (min-width: 640px) {
+    .carved-wood-effect {
+      box-shadow: 
+        inset 6px 6px 12px rgba(0, 0, 0, 0.3),
+        inset -3px -3px 6px rgba(255, 255, 255, 0.1),
+        0 3px 6px rgba(0, 0, 0, 0.2);
+    }
+  }
+  
+  @media (min-width: 1024px) {
+    .carved-wood-effect {
+      box-shadow: 
+        inset 8px 8px 16px rgba(0, 0, 0, 0.3),
+        inset -4px -4px 8px rgba(255, 255, 255, 0.1),
+        0 4px 8px rgba(0, 0, 0, 0.2);
+    }
   }
   
   .carved-wood-effect img {
