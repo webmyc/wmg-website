@@ -261,9 +261,9 @@ const councilMembers = [
   /* Team grid styling */
   .team-grid {
     display: grid; 
-    gap: 1rem; 
+    gap: 1.5rem; 
     grid-template-columns: 1fr; 
-    align-items: start;
+    align-items: stretch; /* Ensure equal heights */
   }
   
   @media (min-width: 900px) { 
@@ -276,9 +276,12 @@ const councilMembers = [
     background: var(--card); 
     border: 1px solid rgba(255, 255, 255, .06); 
     border-radius: 14px; 
-    padding: 1rem; 
+    padding: 1.5rem; 
     text-align: center; 
     transition: transform .25s ease, box-shadow .25s ease;
+    display: flex;
+    flex-direction: column;
+    height: 100%; /* Ensure equal heights */
   }
   
   .team-card:hover { 
@@ -291,16 +294,23 @@ const councilMembers = [
     aspect-ratio: 1/1; 
     object-fit: cover; 
     border-radius: 10px; 
+    flex-shrink: 0;
   }
   
   .team-card .name { 
-    margin-top: .75rem; 
+    margin-top: 1rem; 
     color: var(--ink); 
+    font-size: 1.5rem;
+    font-weight: 600;
+    line-height: 1.3;
   }
   
   .team-card .bio { 
     color: var(--ink-dim); 
-    font-size: .95rem; 
+    font-size: 1rem; 
+    line-height: 1.5;
+    margin-top: 0.75rem;
+    flex-grow: 1; /* Push content to fill available space */
   }
 
   /* Respect reduced motion */

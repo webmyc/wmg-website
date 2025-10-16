@@ -12,7 +12,7 @@ export interface Props {
 const {
   title = "The Whole Men Gathering - Gene Keys Community for Men",
   description = "Join a global community of men exploring ancient, contemporary and emergent wisdom through the Gene Keys Noble Code. Monthly gatherings every last Tuesday.",
-  image = "https://whole-men-gathering.vercel.app/og/wmg-hero.jpg",
+  image = "https://wmg.suuna.org/og/wmg-hero.jpg",
   canonical = Astro.url.href
 } = Astro.props;
 
@@ -22,29 +22,29 @@ const jsonLd = {
   "@graph": [
     {
       "@type": "Organization",
-      "@id": "https://wholemengathering.org/#organization",
+      "@id": "https://wmg.suuna.org/#organization",
       "name": "The Whole Men Gathering",
-      "url": "https://wholemengathering.org",
+      "url": "https://wmg.suuna.org",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://whole-men-gathering.vercel.app/og/wmg-hero.jpg"
+        "url": "https://wmg.suuna.org/og/wmg-hero.jpg"
       },
-      "image": "https://whole-men-gathering.vercel.app/og/wmg-hero.jpg",
+      "image": "https://wmg.suuna.org/og/wmg-hero.jpg",
       "sameAs": [],
       "contactPoint": {
         "@type": "ContactPoint",
         "contactType": "General Inquiry",
-        "url": "https://wholemengathering.org/#signup"
+        "url": "https://wmg.suuna.org/#signup"
       }
     },
     {
       "@type": "WebSite",
-      "@id": "https://wholemengathering.org/#website",
-      "url": "https://wholemengathering.org",
+      "@id": "https://wmg.suuna.org/#website",
+      "url": "https://wmg.suuna.org",
       "name": "The Whole Men Gathering",
       "description": description,
       "publisher": {
-        "@id": "https://wholemengathering.org/#organization"
+        "@id": "https://wmg.suuna.org/#organization"
       },
       "potentialAction": {
         "@type": "SearchAction",
@@ -61,7 +61,7 @@ const jsonLd = {
         "@id": "https://wholemengathering.org/#website"
       },
       "about": {
-        "@id": "https://wholemengathering.org/#organization"
+        "@id": "https://wmg.suuna.org/#organization"
       },
       "description": description,
       "breadcrumb": {
@@ -82,7 +82,7 @@ const jsonLd = {
       "name": "Matthew",
       "description": "Mentor and facilitator devoted to men's inner work and service to community.",
       "memberOf": {
-        "@id": "https://wholemengathering.org/#organization"
+        "@id": "https://wmg.suuna.org/#organization"
       }
     },
     {
@@ -91,7 +91,7 @@ const jsonLd = {
       "name": "Jesse",
       "description": "Guide in embodiment and relational practice, weaving modern insight with perennial wisdom.",
       "memberOf": {
-        "@id": "https://wholemengathering.org/#organization"
+        "@id": "https://wmg.suuna.org/#organization"
       }
     },
     {
@@ -100,7 +100,7 @@ const jsonLd = {
       "name": "William",
       "description": "Practitioner of contemplative arts, supporting men to live with clarity, courage and compassion.",
       "memberOf": {
-        "@id": "https://wholemengathering.org/#organization"
+        "@id": "https://wmg.suuna.org/#organization"
       }
     },
     {
@@ -109,7 +109,7 @@ const jsonLd = {
       "name": "Yungen", 
       "description": "Space-holder and circle convener, honoring the noble code through practical daily action.",
       "memberOf": {
-        "@id": "https://wholemengathering.org/#organization"
+        "@id": "https://wmg.suuna.org/#organization"
       }
     }
   ]

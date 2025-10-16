@@ -4,7 +4,7 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        'wmg-bg': '#1a1a0f',
+        'wmg-bg': '#0f241f',
         'wmg-text': '#f5f5f0',
         'wmg-gold': '#d4af37',
       },

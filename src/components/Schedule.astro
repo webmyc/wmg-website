@@ -112,24 +112,25 @@ const jsonLd = {
       </div>
     </div>
     
-    <div class="events-grid">
+    <ul class="space-y-8 sm:space-y-12">
       {gatherings.map((gathering, index) => (
-        <article class={`event-card reveal gathering-${index + 1}`} id={`event-${index + 1}`}>
-          <div class="rail"></div>
-          <header>
-            <div class="date">
+        <li class="gathering-item reveal">
+          <div class="text-center">
+            <div class="text-wmg-gold text-lg sm:text-xl font-medium mb-3 sm:mb-4">
               {new Date(gathering.date).toLocaleDateString('en-US', { 
                 month: 'long', 
                 day: 'numeric',
                 year: 'numeric'
               })}
             </div>
-            <h3 class="title">{gathering.title}</h3>
-          </header>
-          <footer>
-            <button 
-              class="cta"
-              onclick={() => {
+            <h3 class="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-wmg-text mb-6 sm:mb-8 leading-tight">
+              {gathering.title}
+            </h3>
+            <a 
+              href="#signup"
+              class="inline-block bg-wmg-gold text-wmg-bg px-6 sm:px-8 py-3 sm:py-4 rounded-full font-semibold text-base sm:text-lg hover:bg-wmg-gold/90 transition-colors duration-300"
+              onclick={(e) => {
+                e.preventDefault();
                 const el = document.querySelector('#signup');
                 if (el) {
                   el.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -137,11 +138,11 @@ const jsonLd = {
               }}
             >
               Get invites by email
-            </button>
-          </footer>
-        </article>
+            </a>
+          </div>
+        </li>
       ))}
-    </div>
+    </ul>
   </div>
 </section>
 
@@ -577,74 +578,16 @@ const jsonLd = {
     }
   }
   
-  /* Events grid and cards */
-  .events-grid {
-    display: grid; 
-    gap: 1rem;
-    grid-template-columns: 1fr;
+  /* Timeline layout styles */
+  .gathering-item {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
   }
   
-  @media (min-width: 820px) { 
-    .events-grid { 
-      grid-template-columns: 1fr 1fr; 
-    } 
-  }
-  
-  .event-card {
-    position: relative; 
-    background: var(--card); 
-    border: 1px solid rgba(255, 255, 255, .06);
-    border-left: none; 
-    overflow: hidden; 
-    border-radius: 12px; 
-    padding: 1rem 1rem 1rem 1.25rem;
-    transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
-  }
-  
-  .event-card .rail {
-    position: absolute; 
-    left: 0; 
-    top: 0; 
-    bottom: 0; 
-    width: 4px; 
-    background: linear-gradient(var(--gold), transparent);
-    opacity: .8;
-  }
-  
-  .event-card:hover { 
-    transform: translateY(-3px); 
-    box-shadow: 0 10px 24px rgba(0, 0, 0, .28); 
-    border-color: rgba(205, 165, 91, .25); 
-  }
-  
-  .date { 
-    color: var(--gold); 
-    font-size: .85rem; 
-    letter-spacing: .06em; 
-  }
-  
-  .title { 
-    margin: .25rem 0 .35rem; 
-    line-height: 1.35; 
-    color: var(--ink);
-  }
-  
-  .cta {
-    margin-top: .75rem; 
-    background: transparent; 
-    color: var(--gold);
-    border: 1px solid var(--gold-dim); 
-    border-radius: 999px; 
-    padding: .5rem .9rem; 
-    font-size: .9rem;
-    transition: background .2s ease, color .2s ease, border-color .2s ease;
-    cursor: pointer;
-  }
-  
-  .cta:hover { 
-    background: rgba(205, 165, 91, .12); 
-    border-color: var(--gold); 
-    color: var(--ink); 
+  .gathering-item.reveal {
+    opacity: 1;
+    transform: translateY(0);
   }
 
   /* Respect reduced motion */

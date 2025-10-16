@@ -2,8 +2,19 @@
 // Footer component with closing message and credits
 ---
 
-<footer class="py-16 sm:py-20 px-4 sm:px-6 bg-wmg-bg border-t border-wmg-text/10">
-  <div class="max-w-4xl mx-auto text-center space-y-6 sm:space-y-8">
+<footer class="py-16 sm:py-20 px-4 sm:px-6 bg-wmg-bg border-t border-wmg-text/10 relative overflow-hidden">
+  <!-- Large background logo -->
+  <div class="footer-bg-logo">
+    <img
+      src="/logo.png"
+      alt=""
+      class="footer-logo-bg"
+      loading="lazy"
+      aria-hidden="true"
+    />
+  </div>
+  
+  <div class="max-w-4xl mx-auto text-center space-y-6 sm:space-y-8 relative z-10">
     <!-- Footer Logo -->
     <div class="fade-up mb-8">
       <img
@@ -65,5 +76,38 @@
   .fade-up.reveal {
     opacity: 1;
     transform: translateY(0);
+  }
+
+  /* Footer background logo */
+  .footer-bg-logo {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  .footer-logo-bg {
+    width: 800px;
+    height: 800px;
+    opacity: 0.33;
+    object-fit: contain;
+    filter: blur(1px);
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .footer-logo-bg {
+      width: 600px;
+      height: 600px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .footer-logo-bg {
+      width: 400px;
+      height: 400px;
+    }
   }
 </style>
