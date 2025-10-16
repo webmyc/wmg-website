@@ -112,25 +112,36 @@ const jsonLd = {
       </div>
     </div>
     
-    <ul class="space-y-6 sm:space-y-8">
+    <div class="events-grid">
       {gatherings.map((gathering, index) => (
-        <li class={`gathering-item gathering-${index + 1} border-l-4 border-wmg-gold pl-4 sm:pl-6 py-3 sm:py-4`}>
-          <time 
-            datetime={`${gathering.date}T${gathering.time}:00+00:00`}
-            class="block text-base sm:text-lg md:text-xl font-semibold text-wmg-gold mb-2"
-          >
-            {new Date(gathering.date).toLocaleDateString('en-US', { 
-              month: 'long', 
-              day: 'numeric',
-              year: 'numeric'
-            })}
-          </time>
-          <h3 class="text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl text-wmg-text leading-relaxed">
-            {gathering.title}
-          </h3>
-        </li>
+        <article class={`event-card reveal gathering-${index + 1}`} id={`event-${index + 1}`}>
+          <div class="rail"></div>
+          <header>
+            <div class="date">
+              {new Date(gathering.date).toLocaleDateString('en-US', { 
+                month: 'long', 
+                day: 'numeric',
+                year: 'numeric'
+              })}
+            </div>
+            <h3 class="title">{gathering.title}</h3>
+          </header>
+          <footer>
+            <button 
+              class="cta"
+              onclick={() => {
+                const el = document.querySelector('#signup');
+                if (el) {
+                  el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+              }}
+            >
+              Get invites by email
+            </button>
+          </footer>
+        </article>
       ))}
-    </ul>
+    </div>
   </div>
 </section>
 
@@ -566,6 +577,76 @@ const jsonLd = {
     }
   }
   
+  /* Events grid and cards */
+  .events-grid {
+    display: grid; 
+    gap: 1rem;
+    grid-template-columns: 1fr;
+  }
+  
+  @media (min-width: 820px) { 
+    .events-grid { 
+      grid-template-columns: 1fr 1fr; 
+    } 
+  }
+  
+  .event-card {
+    position: relative; 
+    background: var(--card); 
+    border: 1px solid rgba(255, 255, 255, .06);
+    border-left: none; 
+    overflow: hidden; 
+    border-radius: 12px; 
+    padding: 1rem 1rem 1rem 1.25rem;
+    transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+  }
+  
+  .event-card .rail {
+    position: absolute; 
+    left: 0; 
+    top: 0; 
+    bottom: 0; 
+    width: 4px; 
+    background: linear-gradient(var(--gold), transparent);
+    opacity: .8;
+  }
+  
+  .event-card:hover { 
+    transform: translateY(-3px); 
+    box-shadow: 0 10px 24px rgba(0, 0, 0, .28); 
+    border-color: rgba(205, 165, 91, .25); 
+  }
+  
+  .date { 
+    color: var(--gold); 
+    font-size: .85rem; 
+    letter-spacing: .06em; 
+  }
+  
+  .title { 
+    margin: .25rem 0 .35rem; 
+    line-height: 1.35; 
+    color: var(--ink);
+  }
+  
+  .cta {
+    margin-top: .75rem; 
+    background: transparent; 
+    color: var(--gold);
+    border: 1px solid var(--gold-dim); 
+    border-radius: 999px; 
+    padding: .5rem .9rem; 
+    font-size: .9rem;
+    transition: background .2s ease, color .2s ease, border-color .2s ease;
+    cursor: pointer;
+  }
+  
+  .cta:hover { 
+    background: rgba(205, 165, 91, .12); 
+    border-color: var(--gold); 
+    color: var(--ink); 
+  }
+
   /* Respect reduced motion */
   @media (prefers-reduced-motion: reduce) {
     .animate-float,

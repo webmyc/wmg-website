@@ -1,0 +1,42 @@
+:root {
+  --bg-deep: #0b1612;          /* darker base for better contrast */
+  --ink: #f6f4ed;              /* light text */
+  --ink-dim: #d9d4c8;
+  --gold: #cda55b;             /* accent */
+  --gold-dim: #a98a4c;
+  --muted: #111a16;
+  --card: #0f1915;
+  --glow: rgba(205, 165, 91, .25);
+}
+
+html, body {
+  background: var(--bg-deep); 
+  color: var(--ink);
+}
+
+.section {
+  max-width: 1200px; 
+  margin-inline: auto; 
+  padding: 6rem 1.25rem;
+}
+
+.section--tight {
+  padding-block: 4rem;
+}
+
+.prose p {
+  max-width: 68ch; 
+  line-height: 1.75;
+}
+
+h1, h2, h3 {
+  letter-spacing: .02em;
+}
+
+.elev-1 {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, .28);
+}
+
+.border-gold {
+  border-color: rgba(205, 165, 91, .35);
+}

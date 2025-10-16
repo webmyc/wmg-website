@@ -1,0 +1,18 @@
+/* src/styles/reveal.css */
+.reveal {
+  opacity: 0; 
+  transform: translateY(28px); 
+  transition: opacity .9s ease, transform .9s cubic-bezier(.2, .7, .2, 1);
+}
+
+.reveal.is-in {
+  opacity: 1; 
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1; 
+    transform: none;
+  }
+}

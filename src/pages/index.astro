@@ -8,6 +8,7 @@ import Invite from '../components/Invite.astro';
 import SignupForm from '../components/SignupForm.astro';
 import InnerCouncil from '../components/InnerCouncil.astro';
 import Footer from '../components/Footer.astro';
+import mountReveal from '../components/SectionReveal';
 ---
 
 <WMGLayout>
@@ -19,3 +20,10 @@ import Footer from '../components/Footer.astro';
   <InnerCouncil />
   <Footer />
 </WMGLayout>
+
+<script>
+  import mountReveal from '/src/components/SectionReveal.ts';
+  if (typeof window !== 'undefined') {
+    requestAnimationFrame(() => mountReveal('.reveal'));
+  }
+</script>
