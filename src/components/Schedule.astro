@@ -136,62 +136,94 @@ const jsonLd = {
 
 <script type="application/ld+json" set:html={JSON.stringify(jsonLd)}></script>
 
-<script>
-  // Time widget functionality
-  function initTimeWidget() {
-    // Meeting date: October 28, 2025 at 4:00 PM UTC
-    const meetingDate = new Date('2025-10-28T16:00:00Z');
-    
-    function updateTimeDisplay() {
-      const now = new Date();
-      
-      // Create meeting times as UTC dates - these are the source times
-      const meetingStartUTC = new Date('2025-10-28T16:00:00.000Z');
-      const meetingEndUTC = new Date('2025-10-28T17:30:00.000Z');
-      
-      // Simply use toLocaleTimeString on the UTC dates - JavaScript handles timezone conversion automatically
-      const localStartTimeString = meetingStartUTC.toLocaleTimeString('en-US', {
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: false
-      });
-      
-      const localEndTimeString = meetingEndUTC.toLocaleTimeString('en-US', {
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: false
-      });
-      
-      const localDateString = meetingStartUTC.toLocaleDateString('en-US', {
-        weekday: 'short',
-        month: 'short',
-        day: 'numeric',
-        year: 'numeric'
-      });
-      
-      // Update local time display
-      const localTimeElement = document.getElementById('local-time');
-      const localDateElement = document.getElementById('local-date');
-      
-      console.log('Timezone conversion:', {
-        utcTime: '16:00-17:30',
-        localStartTimeString,
-        localEndTimeString,
-        localDateString,
-        userTimezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-        elementsFound: {
-          localTimeElement: !!localTimeElement,
-          localDateElement: !!localDateElement
+    <script>
+      // Time widget functionality
+      function initTimeWidget() {
+        // Meeting date: October 28, 2025 at 4:00 PM UTC
+        const meetingDate = new Date('2025-10-28T16:00:00Z');
+        
+        // Cache for timezone info
+        let detectedTimezone = null;
+        
+        // Function to detect timezone from IP
+        async function detectTimezoneFromIP() {
+          try {
+            // Use a free timezone detection service
+            const response = await fetch('https://worldtimeapi.org/api/ip');
+            const data = await response.json();
+            
+            if (data.timezone) {
+              detectedTimezone = data.timezone;
+              console.log('Detected timezone from IP:', detectedTimezone);
+              return detectedTimezone;
+            }
+          } catch (error) {
+            console.log('IP timezone detection failed, falling back to browser timezone:', error);
+          }
+          
+          // Fallback to browser timezone
+          detectedTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+          console.log('Using browser timezone:', detectedTimezone);
+          return detectedTimezone;
         }
-      });
-      
-      if (localTimeElement) {
-        localTimeElement.textContent = `${localStartTimeString} - ${localEndTimeString}`;
-      }
-      
-      if (localDateElement) {
-        localDateElement.textContent = localDateString;
-      }
+        
+        function updateTimeDisplay() {
+          const now = new Date();
+          
+          // Create meeting times as UTC dates - these are the source times
+          const meetingStartUTC = new Date('2025-10-28T16:00:00.000Z');
+          const meetingEndUTC = new Date('2025-10-28T17:30:00.000Z');
+          
+          // Use detected timezone or browser timezone
+          const timezone = detectedTimezone || Intl.DateTimeFormat().resolvedOptions().timeZone;
+          
+          // Convert to local time using the detected timezone
+          const localStartTimeString = meetingStartUTC.toLocaleTimeString('en-US', {
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false,
+            timeZone: timezone
+          });
+          
+          const localEndTimeString = meetingEndUTC.toLocaleTimeString('en-US', {
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false,
+            timeZone: timezone
+          });
+          
+          const localDateString = meetingStartUTC.toLocaleDateString('en-US', {
+            weekday: 'short',
+            month: 'short',
+            day: 'numeric',
+            year: 'numeric',
+            timeZone: timezone
+          });
+          
+          // Update local time display
+          const localTimeElement = document.getElementById('local-time');
+          const localDateElement = document.getElementById('local-date');
+          
+          console.log('Timezone conversion:', {
+            utcTime: '16:00-17:30',
+            localStartTimeString,
+            localEndTimeString,
+            localDateString,
+            detectedTimezone: timezone,
+            browserTimezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+            elementsFound: {
+              localTimeElement: !!localTimeElement,
+              localDateElement: !!localDateElement
+            }
+          });
+          
+          if (localTimeElement) {
+            localTimeElement.textContent = `${localStartTimeString} - ${localEndTimeString}`;
+          }
+          
+          if (localDateElement) {
+            localDateElement.textContent = localDateString;
+          }
       
       // Calculate countdown
       const timeDiff = meetingDate.getTime() - now.getTime();
@@ -219,19 +251,29 @@ const jsonLd = {
       }
     }
     
-    // Update immediately
-    updateTimeDisplay();
-    
-    // Update every minute
-    setInterval(updateTimeDisplay, 60000);
-  }
-  
-  // Initialize when DOM is ready or immediately if already loaded
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initTimeWidget);
-  } else {
-    initTimeWidget();
-  }
+        // Initialize timezone detection and then update display
+        async function initializeWidget() {
+          await detectTimezoneFromIP();
+          updateTimeDisplay();
+        }
+        
+        // Initialize when DOM is ready or immediately if already loaded
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', initializeWidget);
+        } else {
+          initializeWidget();
+        }
+        
+        // Update every minute
+        setInterval(updateTimeDisplay, 60000);
+      }
+
+      // Initialize when DOM is ready or immediately if already loaded
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initTimeWidget);
+      } else {
+        initTimeWidget();
+      }
 </script>
 
 <style>
