@@ -1,0 +1,46 @@
+---
+// Footer component with closing message and credits
+---
+
+<footer class="py-20 px-6 bg-wmg-bg border-t border-wmg-text/10">
+  <div class="max-w-4xl mx-auto text-center space-y-8">
+    <div class="fade-up">
+      <p class="text-xl md:text-2xl text-wmg-text leading-relaxed">
+        We look forward to gathering in support and service soon.
+      </p>
+    </div>
+    
+    <div class="fade-up">
+      <p class="text-lg text-wmg-text/80 italic">
+        — Matthew, Jesse, William and Yungen • The WMG Inner Council
+      </p>
+    </div>
+    
+    <div class="fade-up pt-8 border-t border-wmg-text/10">
+      <p class="text-sm text-wmg-text/60">
+        web experience created by 
+        <a 
+          href="https://respira.cafe" 
+          class="text-wmg-gold hover:text-wmg-gold/80 transition-colors underline"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          respira
+        </a>
+      </p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .fade-up {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  }
+  
+  .fade-up.reveal {
+    opacity: 1;
+    transform: translateY(0);
+  }
+</style>

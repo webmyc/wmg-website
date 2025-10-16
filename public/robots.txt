@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://wholemengathering.org/sitemap-index.xml

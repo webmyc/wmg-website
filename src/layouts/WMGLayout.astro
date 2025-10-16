@@ -1,0 +1,197 @@
+---
+// WMGLayout with SEO, JSON-LD structured data, and meta tags
+export interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  canonical?: string;
+}
+
+const {
+  title = "The Whole Men Gathering - Gene Keys Community for Men",
+  description = "Join a global community of men exploring ancient, contemporary and emergent wisdom through the Gene Keys Noble Code. Monthly gatherings every last Tuesday.",
+  image = "https://wholemengathering.org/og/wmg-hero.jpg",
+  canonical = Astro.url.href
+} = Astro.props;
+
+// JSON-LD structured data
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://wholemengathering.org/#organization",
+      "name": "The Whole Men Gathering",
+      "url": "https://wholemengathering.org",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://wholemengathering.org/og/wmg-logo.jpg"
+      },
+      "sameAs": [],
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "contactType": "General Inquiry",
+        "url": "https://wholemengathering.org/#signup"
+      }
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://wholemengathering.org/#website",
+      "url": "https://wholemengathering.org",
+      "name": "The Whole Men Gathering",
+      "description": description,
+      "publisher": {
+        "@id": "https://wholemengathering.org/#organization"
+      },
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://wholemengathering.org/#signup",
+        "query-input": "required"
+      }
+    },
+    {
+      "@type": "WebPage",
+      "@id": `${canonical}#webpage`,
+      "url": canonical,
+      "name": title,
+      "isPartOf": {
+        "@id": "https://wholemengathering.org/#website"
+      },
+      "about": {
+        "@id": "https://wholemengathering.org/#organization"
+      },
+      "description": description,
+      "breadcrumb": {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://wholemengathering.org"
+          }
+        ]
+      }
+    },
+    {
+      "@type": "Person",
+      "@id": "https://wholemengathering.org/#matthew",
+      "name": "Matthew",
+      "description": "Mentor and facilitator devoted to men's inner work and service to community.",
+      "memberOf": {
+        "@id": "https://wholemengathering.org/#organization"
+      }
+    },
+    {
+      "@type": "Person", 
+      "@id": "https://wholemengathering.org/#jesse",
+      "name": "Jesse",
+      "description": "Guide in embodiment and relational practice, weaving modern insight with perennial wisdom.",
+      "memberOf": {
+        "@id": "https://wholemengathering.org/#organization"
+      }
+    },
+    {
+      "@type": "Person",
+      "@id": "https://wholemengathering.org/#william", 
+      "name": "William",
+      "description": "Practitioner of contemplative arts, supporting men to live with clarity, courage and compassion.",
+      "memberOf": {
+        "@id": "https://wholemengathering.org/#organization"
+      }
+    },
+    {
+      "@type": "Person",
+      "@id": "https://wholemengathering.org/#yungen",
+      "name": "Yungen", 
+      "description": "Space-holder and circle convener, honoring the noble code through practical daily action.",
+      "memberOf": {
+        "@id": "https://wholemengathering.org/#organization"
+      }
+    }
+  ]
+};
+---
+
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content={description} />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href={canonical} />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={image} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content={canonical} />
+    <meta property="twitter:title" content={title} />
+    <meta property="twitter:description" content={description} />
+    <meta property="twitter:image" content={image} />
+    
+    <!-- Additional SEO -->
+    <meta name="robots" content="index, follow" />
+    <meta name="theme-color" content="#0a1f1a" />
+    
+    <!-- Preload critical resources -->
+    <link rel="preload" href="/hero/hero-1920.jpg" as="image" type="image/jpeg" />
+    
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)}></script>
+    
+    <title>{title}</title>
+  </head>
+  <body class="bg-wmg-bg text-wmg-text antialiased">
+    <slot />
+    
+    <!-- Initialize animations -->
+    <script>
+      import('/src/lib/animate.ts');
+    </script>
+  </body>
+</html>
+
+<style is:global>
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+  
+  /* Focus styles for accessibility */
+  *:focus-visible {
+    outline: 2px solid #d4af37;
+    outline-offset: 2px;
+  }
+  
+  /* Smooth transitions for interactive elements */
+  a, button {
+    transition: all 0.2s ease-in-out;
+  }
+  
+  /* High contrast mode support */
+  @media (prefers-contrast: high) {
+    .text-wmg-text\/90 {
+      color: #f5f5f0 !important;
+    }
+    .text-wmg-text\/80 {
+      color: #f5f5f0 !important;
+    }
+  }
+</style>

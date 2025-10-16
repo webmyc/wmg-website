@@ -1,0 +1,109 @@
+---
+// Hero component with noise animation and responsive background
+---
+
+<section class="relative min-h-screen flex items-center justify-center overflow-hidden bg-wmg-bg">
+  <!-- Noise overlay SVG -->
+  <svg class="absolute inset-0 w-full h-full pointer-events-none opacity-[0.06]" aria-hidden="true">
+    <defs>
+      <filter id="wmg-noise" x="0%" y="0%" width="100%" height="100%">
+        <feTurbulence 
+          baseFrequency="0.9" 
+          numOctaves="4" 
+          stitchTiles="stitch"
+          type="fractalNoise"
+        />
+        <feColorMatrix values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0"/>
+      </filter>
+    </defs>
+    <rect width="100%" height="100%" filter="url(#wmg-noise)" class="animate-grain" />
+  </svg>
+
+  <!-- Background image -->
+  <div class="absolute inset-0">
+    <picture>
+      <source 
+        media="(min-width: 1200px)" 
+        srcset="/hero/hero-2560.webp 2560w, /hero/hero-1920.webp 1920w"
+        type="image/webp"
+      />
+      <source 
+        media="(min-width: 768px)" 
+        srcset="/hero/hero-1600.webp 1600w"
+        type="image/webp"
+      />
+      <source 
+        media="(min-width: 1200px)" 
+        srcset="/hero/hero-2560.jpg 2560w, /hero/hero-1920.jpg 1920w"
+        type="image/jpeg"
+      />
+      <source 
+        media="(min-width: 768px)" 
+        srcset="/hero/hero-1600.jpg 1600w"
+        type="image/jpeg"
+      />
+      <img 
+        src="/hero/hero-1600.jpg" 
+        alt="The Whole Men Gathering background" 
+        class="w-full h-full object-cover"
+        loading="eager"
+      />
+    </picture>
+    
+    <!-- Copyright notice -->
+    <div class="absolute bottom-4 right-4 text-wmg-text/60 text-xs">
+      Photo by 
+      <a 
+        href="https://www.pexels.com/photo/silhouette-photography-of-people-during-golden-hour-2935914/" 
+        target="_blank" 
+        rel="noopener noreferrer"
+        class="text-wmg-text/80 hover:text-wmg-gold transition-colors underline"
+      >
+        Jeff C
+      </a>
+      on Pexels
+    </div>
+  </div>
+
+  <!-- Content overlay -->
+  <div class="relative z-10 text-center px-6 max-w-4xl mx-auto">
+    <h1 class="text-4xl md:text-6xl lg:text-7xl font-bold text-wmg-text mb-6 leading-tight">
+      The Whole Men Gathering
+    </h1>
+    
+    <p class="text-xl md:text-2xl lg:text-3xl text-wmg-text mb-8 max-w-3xl mx-auto leading-relaxed">
+      Weaving together ancient, contemporary and emergent wisdom approaches for a manhood rooted in service to the whole.
+    </p>
+    
+    <p class="text-lg md:text-xl text-wmg-text/90 mb-10 max-w-2xl mx-auto leading-relaxed">
+      We invite you to take part in a global community based on the Gene Keys Noble Code, open to all men—no matter your level of Gene Keys experience.
+    </p>
+    
+    <a 
+      href="#signup" 
+      class="inline-block bg-wmg-gold text-wmg-bg px-8 py-4 text-lg font-semibold rounded-lg hover:bg-wmg-gold/90 focus:outline-none focus:ring-4 focus:ring-wmg-gold/50 transition-all duration-300 transform hover:scale-105"
+    >
+      Join the Gathering
+    </a>
+  </div>
+</section>
+
+<style>
+  /* Ensure noise animation respects reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    .animate-grain {
+      animation: none;
+    }
+  }
+  
+  /* Smooth scroll behavior for anchor links */
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+</style>

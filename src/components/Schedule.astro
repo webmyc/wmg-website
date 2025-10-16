@@ -1,0 +1,101 @@
+---
+// Schedule component with gatherings list and JSON-LD structured data
+
+const gatherings = [
+  {
+    date: "2024-10-28",
+    time: "16:00",
+    endTime: "17:30",
+    title: "The Gift of Man in today's fast-changing world: being of service to the whole"
+  },
+  {
+    date: "2024-11-25", 
+    time: "16:00",
+    endTime: "17:30",
+    title: "The Siddhis of Manhood: our highest becoming"
+  },
+  {
+    date: "2024-12-30",
+    time: "16:00", 
+    endTime: "17:30",
+    title: "The Wholesome Man: integrating our shadows, gifts and siddhis in daily life"
+  },
+  {
+    date: "2025-01-27",
+    time: "16:00",
+    endTime: "17:30", 
+    title: "Bringing our highest vision into form: envisioning the year ahead"
+  }
+];
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "The Whole Men Gathering",
+  "url": "https://wholemengathering.org",
+  "event": gatherings.map(gathering => ({
+    "@type": "Event",
+    "name": gathering.title,
+    "description": gathering.title,
+    "startDate": `${gathering.date}T${gathering.time}:00+00:00`,
+    "endDate": `${gathering.date}T${gathering.endTime}:00+00:00`,
+    "eventStatus": "https://schema.org/EventScheduled",
+    "eventAttendanceMode": "https://schema.org/OnlineEventAttendanceMode",
+    "location": {
+      "@type": "VirtualLocation",
+      "url": "https://wholemengathering.org"
+    },
+    "organizer": {
+      "@type": "Organization", 
+      "name": "The Whole Men Gathering"
+    }
+  }))
+};
+---
+
+<section aria-labelledby="gatherings" class="py-20 px-6 bg-wmg-bg">
+  <div class="max-w-4xl mx-auto">
+    <h2 id="gatherings" class="text-3xl md:text-4xl lg:text-5xl font-bold text-wmg-text mb-6 text-center fade-up">
+      Gatherings
+    </h2>
+    
+    <p class="text-xl md:text-2xl text-wmg-text/80 mb-12 text-center fade-up">
+      Every last Tuesday of the month, 4:00–5:30 pm UTC
+    </p>
+    
+    <ul class="space-y-8">
+      {gatherings.map((gathering, index) => (
+        <li class="fade-up border-l-4 border-wmg-gold pl-6 py-4">
+          <time 
+            datetime={`${gathering.date}T${gathering.time}:00+00:00`}
+            class="block text-lg md:text-xl font-semibold text-wmg-gold mb-2"
+          >
+            {new Date(gathering.date).toLocaleDateString('en-US', { 
+              month: 'long', 
+              day: 'numeric',
+              year: 'numeric'
+            })}
+          </time>
+          <h3 class="text-lg md:text-xl text-wmg-text leading-relaxed">
+            {gathering.title}
+          </h3>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<script type="application/ld+json" set:html={JSON.stringify(jsonLd)}></script>
+
+<style>
+  .fade-up {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  }
+  
+  .fade-up.reveal {
+    opacity: 1;
+    transform: translateY(0);
+  }
+</style>
