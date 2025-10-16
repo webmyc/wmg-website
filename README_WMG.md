@@ -80,20 +80,49 @@ npm run build
 
 The built site will be in the `dist/` directory.
 
-## Vercel Deployment
+## Deployment Options
 
-### Project Settings
+### GitHub Repository
 
-- **Root Directory**: `sites/wmg`
+The project is hosted at: **https://github.com/webmyc/wmg-website**
+
+### Vercel Deployment
+
+#### Option 1: Connect GitHub Repository
+1. Go to [Vercel Dashboard](https://vercel.com/dashboard)
+2. Click "New Project"
+3. Import the `wmg-website` repository
+4. Set the following settings:
+   - **Root Directory**: `.` (since the repo contains the WMG project directly)
+   - **Build Command**: `pnpm build`
+   - **Output Directory**: `dist`
+   - **Install Command**: `pnpm install`
+
+#### Option 2: Manual Deployment
+- **Root Directory**: `.`
 - **Build Command**: `pnpm build` (or `npm run build`)
 - **Output Directory**: `dist`
 - **Install Command**: `pnpm install` (or `npm install`)
 
 ### Environment Variables
 
-Set the following environment variable in Vercel:
+Set the following environment variables in your deployment platform:
 
 - `PUBLIC_FORMSPREE_ID`: Your Formspree form ID for the signup form
+
+### GitHub Actions
+
+The repository includes GitHub Actions workflows for:
+- **Vercel Deployment**: Automatic deployment on push to main branch
+- **GitHub Pages**: Alternative deployment option
+
+#### Required Secrets for GitHub Actions
+
+For Vercel deployment, add these secrets to your GitHub repository:
+- `VERCEL_TOKEN`: Your Vercel API token
+- `VERCEL_ORG_ID`: Your Vercel organization ID  
+- `VERCEL_PROJECT_ID`: Your Vercel project ID
+- `PUBLIC_FORMSPREE_ID`: Your Formspree form ID
 
 ### Custom Domain
 
