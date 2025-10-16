@@ -64,7 +64,7 @@ import AudioToggle from './AudioToggle.astro';
           <img
             src="/logo.png"
             alt="The Whole Men Gathering Logo"
-            class="w-36 h-36 sm:w-48 sm:h-48 md:w-60 md:h-60 mx-auto opacity-90 hover:opacity-100 transition-opacity duration-300"
+            class="w-36 h-36 sm:w-48 sm:h-48 md:w-60 md:h-60 mx-auto opacity-90 hover:opacity-100 transition-opacity duration-300 logo-glow"
             loading="eager"
           />
         </div>
@@ -190,25 +190,35 @@ import AudioToggle from './AudioToggle.astro';
     background-size: 20px 20px;
   }
   
-  /* Additional floating animation */
-  @keyframes floatSlow {
-    0%, 100% {
-      transform: translateY(0px) translateX(0px) scale(1);
-    }
-    25% {
-      transform: translateY(-15px) translateX(8px) scale(1.02);
-    }
-    50% {
-      transform: translateY(-8px) translateX(-5px) scale(0.98);
-    }
-    75% {
-      transform: translateY(12px) translateX(3px) scale(1.01);
-    }
-  }
-  
-  .animate-float-slow {
-    animation: floatSlow 12s ease-in-out infinite;
-  }
+      /* Additional floating animation */
+      @keyframes floatSlow {
+        0%, 100% {
+          transform: translateY(0px) translateX(0px) scale(1);
+        }
+        25% {
+          transform: translateY(-15px) translateX(8px) scale(1.02);
+        }
+        50% {
+          transform: translateY(-8px) translateX(-5px) scale(0.98);
+        }
+        75% {
+          transform: translateY(12px) translateX(3px) scale(1.01);
+        }
+      }
+
+      .animate-float-slow {
+        animation: floatSlow 12s ease-in-out infinite;
+      }
+
+      /* Logo glow effect */
+      .logo-glow {
+        filter: drop-shadow(0 0 20px rgba(212, 175, 55, 0.3)) drop-shadow(0 0 40px rgba(212, 175, 55, 0.15));
+        background: transparent !important;
+      }
+
+      .logo-glow:hover {
+        filter: drop-shadow(0 0 25px rgba(212, 175, 55, 0.4)) drop-shadow(0 0 50px rgba(212, 175, 55, 0.2));
+      }
   
   /* Ensure noise animation respects reduced motion */
   @media (prefers-reduced-motion: reduce) {
