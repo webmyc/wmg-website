@@ -79,20 +79,36 @@ const jsonLd = {
     
     <!-- Next Meeting Section -->
     <div class="mb-8 sm:mb-12 text-center">
-      <h3 class="text-xl sm:text-2xl font-semibold text-wmg-gold mb-4">
+      <h3 class="text-xl sm:text-2xl font-semibold text-wmg-gold mb-6">
         Next meeting
       </h3>
       <div class="flex justify-center">
-        <span class="wtb-ew-v1" style="width: 100%; max-width: 560px; display:inline-block">
-          <script src="https://www.worldtimebuddy.com/event_widget.js?h=100&md=10/28/2025&mt=16.00&ml=1.50&sts=0&sln=0&wt=ew-ltc"></script>
-          <i style="color: #f5f5f0; font-size: 12px;">
-            <a target="_blank" href="https://www.worldtimebuddy.com/" style="color: #d4af37;">Time converter</a> at worldtimebuddy.com
-          </i>
-          <noscript>
-            <a href="https://www.worldtimebuddy.com/" style="color: #d4af37;">Time converter</a> at worldtimebuddy.com
-          </noscript>
-          <script>window[wtb_event_widgets.pop()].init()</script>
-        </span>
+        <div class="custom-time-widget">
+          <div class="time-display">
+            <div class="utc-time">
+              <span class="time-value">4:00 PM - 5:30 PM</span>
+              <span class="time-label">UTC Time</span>
+              <span class="timezone-info-small">Tue, Oct 28 2025</span>
+            </div>
+            <div class="divider"></div>
+            <div class="local-time">
+              <span class="time-value" id="local-time">Loading...</span>
+              <span class="time-label">Your Time</span>
+              <span class="timezone-info-small" id="local-date">Loading...</span>
+            </div>
+            <div class="divider"></div>
+            <div class="countdown-section">
+              <span class="countdown-label">STARTS IN</span>
+              <div class="countdown-time">
+                <span class="countdown-days" id="countdown-days">--</span>
+                <span class="countdown-text">days</span>
+              </div>
+              <div class="countdown-details" id="countdown-details">
+                <span id="countdown-hours">--</span> hours, <span id="countdown-minutes">--</span> minutes
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     
@@ -119,6 +135,83 @@ const jsonLd = {
 </section>
 
 <script type="application/ld+json" set:html={JSON.stringify(jsonLd)}></script>
+
+<script>
+  // Time widget functionality
+  document.addEventListener('DOMContentLoaded', function() {
+    // Meeting date: October 28, 2025 at 4:00 PM UTC
+    const meetingDate = new Date('2025-10-28T16:00:00Z');
+    
+    function updateTimeDisplay() {
+      const now = new Date();
+      
+      // Calculate local time for the meeting
+      const localMeetingTime = new Date(meetingDate.getTime() + now.getTimezoneOffset() * 60000);
+      
+      // Format local time
+      const localTimeString = localMeetingTime.toLocaleTimeString('en-US', {
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true
+      });
+      
+      // Format local date
+      const localDateString = localMeetingTime.toLocaleDateString('en-US', {
+        weekday: 'short',
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric'
+      });
+      
+      // Update local time display
+      const localTimeElement = document.getElementById('local-time');
+      const localDateElement = document.getElementById('local-date');
+      
+      if (localTimeElement) {
+        localTimeElement.textContent = `${localTimeString} - ${new Date(localMeetingTime.getTime() + 90 * 60000).toLocaleTimeString('en-US', {
+          hour: 'numeric',
+          minute: '2-digit',
+          hour12: true
+        })}`;
+      }
+      
+      if (localDateElement) {
+        localDateElement.textContent = localDateString;
+      }
+      
+      // Calculate countdown
+      const timeDiff = meetingDate.getTime() - now.getTime();
+      
+      if (timeDiff > 0) {
+        const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+        
+        // Update countdown display
+        const daysElement = document.getElementById('countdown-days');
+        const hoursElement = document.getElementById('countdown-hours');
+        const minutesElement = document.getElementById('countdown-minutes');
+        
+        if (daysElement) daysElement.textContent = days;
+        if (hoursElement) hoursElement.textContent = hours;
+        if (minutesElement) minutesElement.textContent = minutes;
+      } else {
+        // Meeting has passed
+        const daysElement = document.getElementById('countdown-days');
+        const detailsElement = document.getElementById('countdown-details');
+        
+        if (daysElement) daysElement.textContent = '0';
+        if (detailsElement) detailsElement.textContent = 'Meeting has started';
+      }
+    }
+    
+    // Update immediately
+    updateTimeDisplay();
+    
+    // Update every minute
+    setInterval(updateTimeDisplay, 60000);
+  });
+</script>
 
 <style>
   /* Organic floating animations */
@@ -204,20 +297,134 @@ const jsonLd = {
     transition: all 0.6s ease-out;
   }
   
-  /* Time widget styling */
-  .wtb-ew-v1 {
-    background: rgba(245, 245, 240, 0.1);
-    border: 1px solid rgba(212, 175, 55, 0.3);
+  /* Custom time widget styling */
+  .custom-time-widget {
+    background: rgba(245, 245, 240, 0.05);
+    border: 2px solid rgba(212, 175, 55, 0.3);
+    border-radius: 12px;
+    padding: 20px;
+    max-width: 500px;
+    width: 100%;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+  }
+  
+  .time-display {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  
+  .utc-time, .local-time {
+    flex: 1;
+    text-align: center;
+  }
+  
+  .countdown-section {
+    flex: 1.2;
+    text-align: center;
+    background: rgba(212, 175, 55, 0.1);
     border-radius: 8px;
     padding: 12px;
   }
   
-  .wtb-ew-v1 * {
-    color: #f5f5f0 !important;
+  .time-value {
+    display: block;
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: #d4af37;
+    margin-bottom: 4px;
+    font-family: 'Cormorant Garamond', serif;
   }
   
-  .wtb-ew-v1 a {
-    color: #d4af37 !important;
+  .time-label {
+    display: block;
+    font-size: 0.875rem;
+    color: #f5f5f0;
+    opacity: 0.8;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 2px;
+  }
+  
+  .timezone-info-small {
+    display: block;
+    font-size: 0.75rem;
+    color: #f5f5f0;
+    opacity: 0.6;
+  }
+  
+  .divider {
+    width: 2px;
+    height: 60px;
+    background: linear-gradient(to bottom, transparent, #d4af37, transparent);
+    margin: 0 8px;
+  }
+  
+  .countdown-label {
+    display: block;
+    font-size: 0.75rem;
+    color: #f5f5f0;
+    opacity: 0.7;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+  }
+  
+  .countdown-time {
+    margin-bottom: 4px;
+  }
+  
+  .countdown-days {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #f5f5f0;
+    font-family: 'Cormorant Garamond', serif;
+  }
+  
+  .countdown-text {
+    font-size: 0.875rem;
+    color: #f5f5f0;
+    opacity: 0.8;
+    margin-left: 4px;
+  }
+  
+  .countdown-details {
+    font-size: 0.75rem;
+    color: #f5f5f0;
+    opacity: 0.7;
+  }
+  
+  /* Mobile responsive */
+  @media (max-width: 640px) {
+    .time-display {
+      flex-direction: column;
+      gap: 12px;
+    }
+    
+    .divider {
+      width: 60px;
+      height: 2px;
+      background: linear-gradient(to right, transparent, #d4af37, transparent);
+      margin: 0 auto;
+    }
+    
+    .time-value {
+      font-size: 1.125rem;
+    }
+    
+    .countdown-days {
+      font-size: 1.25rem;
+    }
+    
+    .custom-time-widget {
+      padding: 16px;
+    }
+    
+    .countdown-section {
+      padding: 10px;
+    }
   }
   
   .gathering-1 {
