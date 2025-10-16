@@ -82,16 +82,6 @@ const jsonLd = {
           <h3 class="text-xl sm:text-2xl font-semibold text-wmg-gold mb-6">
             Next meeting
           </h3>
-          <!-- Refresh button for testing timezone detection -->
-          <div class="mb-4">
-            <button 
-              id="refresh-timezone" 
-              class="text-xs text-wmg-text/60 hover:text-wmg-gold transition-colors underline"
-              title="Refresh timezone detection (useful when changing VPN)"
-            >
-              🔄 Refresh Timezone
-            </button>
-          </div>
           <div class="flex justify-center">
             <div class="custom-time-widget">
           <div class="time-display">
@@ -304,12 +294,6 @@ const jsonLd = {
           updateTimeDisplay();
         }
         
-        // Refresh timezone detection
-        async function refreshTimezone() {
-          console.log('Manually refreshing timezone detection...');
-          await detectTimezoneFromIP(true); // Force refresh
-          updateTimeDisplay();
-        }
         
         // Initialize when DOM is ready or immediately if already loaded
         if (document.readyState === 'loading') {
@@ -318,13 +302,6 @@ const jsonLd = {
           initializeWidget();
         }
         
-        // Add refresh button event listener
-        document.addEventListener('DOMContentLoaded', function() {
-          const refreshBtn = document.getElementById('refresh-timezone');
-          if (refreshBtn) {
-            refreshBtn.addEventListener('click', refreshTimezone);
-          }
-        });
         
         // Update every minute
         setInterval(updateTimeDisplay, 60000);
