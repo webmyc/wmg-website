@@ -92,9 +92,9 @@ const jsonLd = {
             </div>
             <div class="divider"></div>
             <div class="local-time">
-              <span class="time-value" id="local-time">Loading...</span>
+              <span class="time-value" id="local-time">--:-- - --:--</span>
               <span class="time-label">Your Time</span>
-              <span class="timezone-info-small" id="local-date">Loading...</span>
+              <span class="timezone-info-small" id="local-date">--</span>
             </div>
             <div class="divider"></div>
             <div class="countdown-section">
@@ -138,7 +138,7 @@ const jsonLd = {
 
 <script>
   // Time widget functionality
-  document.addEventListener('DOMContentLoaded', function() {
+  function initTimeWidget() {
     // Meeting date: October 28, 2025 at 4:00 PM UTC
     const meetingDate = new Date('2025-10-28T16:00:00Z');
     
@@ -215,7 +215,14 @@ const jsonLd = {
     
     // Update every minute
     setInterval(updateTimeDisplay, 60000);
-  });
+  }
+  
+  // Initialize when DOM is ready or immediately if already loaded
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initTimeWidget);
+  } else {
+    initTimeWidget();
+  }
 </script>
 
 <style>
@@ -308,7 +315,6 @@ const jsonLd = {
     border: 2px solid rgba(212, 175, 55, 0.3);
     border-radius: 12px;
     padding: 20px;
-    max-width: 500px;
     width: 100%;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
     backdrop-filter: blur(10px);
@@ -340,7 +346,7 @@ const jsonLd = {
     font-weight: bold;
     color: #d4af37;
     margin-bottom: 4px;
-    font-family: 'Cormorant Garamond', serif;
+    font-family: 'Manrope', sans-serif;
   }
   
   .time-label {
