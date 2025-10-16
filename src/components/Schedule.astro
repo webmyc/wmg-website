@@ -115,7 +115,7 @@ const jsonLd = {
     <ul class="space-y-6 sm:space-y-8">
       {gatherings.map((gathering, index) => (
         <li class="gathering-item reveal flex items-start">
-          <div class="w-1 bg-wmg-gold mr-4 sm:mr-6 flex-shrink-0 h-full"></div>
+          <div class="w-1 bg-wmg-gold mr-4 sm:mr-6 flex-shrink-0" style="min-height: 60px;"></div>
           <div class="flex-1">
             <div class="text-wmg-gold text-sm sm:text-base font-semibold mb-2">
               {new Date(gathering.date).toLocaleDateString('en-US', { 
