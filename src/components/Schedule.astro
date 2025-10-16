@@ -145,25 +145,31 @@ const jsonLd = {
     function updateTimeDisplay() {
       const now = new Date();
       
-      // Create meeting times as UTC dates
+      // Create meeting times as UTC dates - these are the source times
       const meetingStartUTC = new Date('2025-10-28T16:00:00.000Z');
       const meetingEndUTC = new Date('2025-10-28T17:30:00.000Z');
       
-      // Convert to user's local time by using the Date constructor
-      // This automatically handles timezone conversion
-      const localStartTime = new Date(meetingStartUTC).toLocaleTimeString('en-US', {
+      // Get user's timezone offset in minutes
+      const timezoneOffset = now.getTimezoneOffset();
+      
+      // Convert UTC times to local times by adjusting for timezone offset
+      const localStartTime = new Date(meetingStartUTC.getTime() - (timezoneOffset * 60000));
+      const localEndTime = new Date(meetingEndUTC.getTime() - (timezoneOffset * 60000));
+      
+      // Format the local times
+      const localStartTimeString = localStartTime.toLocaleTimeString('en-US', {
         hour: '2-digit',
         minute: '2-digit',
         hour12: false
       });
       
-      const localEndTime = new Date(meetingEndUTC).toLocaleTimeString('en-US', {
+      const localEndTimeString = localEndTime.toLocaleTimeString('en-US', {
         hour: '2-digit',
         minute: '2-digit',
         hour12: false
       });
       
-      const localDateString = new Date(meetingStartUTC).toLocaleDateString('en-US', {
+      const localDateString = localStartTime.toLocaleDateString('en-US', {
         weekday: 'short',
         month: 'short',
         day: 'numeric',
@@ -174,10 +180,12 @@ const jsonLd = {
       const localTimeElement = document.getElementById('local-time');
       const localDateElement = document.getElementById('local-date');
       
-      console.log('Local time calculation:', {
-        localStartTime,
-        localEndTime,
+      console.log('Timezone conversion:', {
+        timezoneOffset,
+        localStartTimeString,
+        localEndTimeString,
         localDateString,
+        utcTime: '16:00-17:30',
         elementsFound: {
           localTimeElement: !!localTimeElement,
           localDateElement: !!localDateElement
@@ -185,7 +193,7 @@ const jsonLd = {
       });
       
       if (localTimeElement) {
-        localTimeElement.textContent = `${localStartTime} - ${localEndTime}`;
+        localTimeElement.textContent = `${localStartTimeString} - ${localEndTimeString}`;
       }
       
       if (localDateElement) {
