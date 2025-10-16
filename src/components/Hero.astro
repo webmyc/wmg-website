@@ -45,6 +45,16 @@ import AudioToggle from './AudioToggle.astro';
     
     <!-- Subtle vignette effect -->
     <div class="absolute inset-0 bg-radial-gradient from-transparent via-transparent to-black/30"></div>
+    
+    <!-- Animated gradient flares -->
+    <div class="absolute inset-0">
+      <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-gradient-radial from-wmg-gold/10 via-wmg-gold/5 to-transparent rounded-full blur-3xl animate-float"></div>
+      <div class="absolute bottom-1/3 right-1/4 w-80 h-80 bg-gradient-radial from-wmg-gold/8 via-wmg-gold/3 to-transparent rounded-full blur-3xl animate-float-delayed"></div>
+      <div class="absolute top-1/2 right-1/3 w-64 h-64 bg-gradient-radial from-wmg-gold/6 via-wmg-gold/2 to-transparent rounded-full blur-2xl animate-float-slow"></div>
+    </div>
+    
+    <!-- Noise overlay -->
+    <div class="absolute inset-0 opacity-[0.03] bg-noise-pattern"></div>
   </div>
 
   <!-- Content overlay -->
@@ -131,6 +141,38 @@ import AudioToggle from './AudioToggle.astro';
   /* Radial gradient utility */
   .bg-radial-gradient {
     background: radial-gradient(circle at center, var(--tw-gradient-stops));
+  }
+  
+  /* Gradient radial utility */
+  .bg-gradient-radial {
+    background: radial-gradient(circle at center, var(--tw-gradient-stops));
+  }
+  
+  /* Noise pattern background */
+  .bg-noise-pattern {
+    background-image: 
+      radial-gradient(circle at 1px 1px, rgba(255,255,255,0.15) 1px, transparent 0);
+    background-size: 20px 20px;
+  }
+  
+  /* Additional floating animation */
+  @keyframes floatSlow {
+    0%, 100% {
+      transform: translateY(0px) translateX(0px) scale(1);
+    }
+    25% {
+      transform: translateY(-15px) translateX(8px) scale(1.02);
+    }
+    50% {
+      transform: translateY(-8px) translateX(-5px) scale(0.98);
+    }
+    75% {
+      transform: translateY(12px) translateX(3px) scale(1.01);
+    }
+  }
+  
+  .animate-float-slow {
+    animation: floatSlow 12s ease-in-out infinite;
   }
   
   /* Ensure noise animation respects reduced motion */

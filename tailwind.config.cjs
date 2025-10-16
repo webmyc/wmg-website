@@ -9,13 +9,16 @@ module.exports = {
         'wmg-gold': '#d4af37',
       },
       fontFamily: {
-        sans: ['system-ui', 'sans-serif'],
+        'heading': ['Cormorant Garamond', 'serif'],
+        'body': ['Manrope', 'sans-serif'],
+        'sans': ['Manrope', 'sans-serif'],
       },
       animation: {
         'grain': 'grain 8s steps(10) infinite',
         'fade-up': 'fadeUp 0.6s ease-out',
         'float': 'float 8s ease-in-out infinite',
         'float-delayed': 'floatDelayed 10s ease-in-out infinite 2s',
+        'float-slow': 'floatSlow 12s ease-in-out infinite',
       },
       keyframes: {
         grain: {
@@ -43,6 +46,12 @@ module.exports = {
           '0%, 100%': { transform: 'translateY(0px) translateX(0px) scale(1)' },
           '33%': { transform: 'translateY(15px) translateX(-10px) scale(0.95)' },
           '66%': { transform: 'translateY(-10px) translateX(5px) scale(1.05)' },
+        },
+        floatSlow: {
+          '0%, 100%': { transform: 'translateY(0px) translateX(0px) scale(1)' },
+          '25%': { transform: 'translateY(-15px) translateX(8px) scale(1.02)' },
+          '50%': { transform: 'translateY(-8px) translateX(-5px) scale(0.98)' },
+          '75%': { transform: 'translateY(12px) translateX(3px) scale(1.01)' },
         },
       },
     },
