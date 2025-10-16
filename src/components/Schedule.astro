@@ -123,22 +123,9 @@ const jsonLd = {
                 year: 'numeric'
               })}
             </div>
-            <h3 class="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-wmg-text mb-6 sm:mb-8 leading-tight">
+            <h3 class="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-wmg-text leading-tight">
               {gathering.title}
             </h3>
-            <a 
-              href="#signup"
-              class="inline-block bg-wmg-gold text-wmg-bg px-6 sm:px-8 py-3 sm:py-4 rounded-full font-semibold text-base sm:text-lg hover:bg-wmg-gold/90 transition-colors duration-300"
-              onclick={(e) => {
-                e.preventDefault();
-                const el = document.querySelector('#signup');
-                if (el) {
-                  el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }
-              }}
-            >
-              Get invites by email
-            </a>
           </div>
         </li>
       ))}
