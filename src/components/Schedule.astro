@@ -145,22 +145,31 @@ const jsonLd = {
     function updateTimeDisplay() {
       const now = new Date();
       
-      // Calculate local time for the meeting
-      const localMeetingTime = new Date(meetingDate.getTime() + now.getTimezoneOffset() * 60000);
+      // Convert UTC meeting time to user's local timezone
+      const meetingStartUTC = new Date('2025-10-28T16:00:00Z');
+      const meetingEndUTC = new Date('2025-10-28T17:30:00Z');
       
-      // Format local time
-      const localTimeString = localMeetingTime.toLocaleTimeString('en-US', {
-        hour: 'numeric',
+      // Format times in user's local timezone (24-hour format)
+      const localStartTime = meetingStartUTC.toLocaleTimeString('en-US', {
+        hour: '2-digit',
         minute: '2-digit',
-        hour12: true
+        hour12: false,
+        timeZone: 'local'
       });
       
-      // Format local date
-      const localDateString = localMeetingTime.toLocaleDateString('en-US', {
+      const localEndTime = meetingEndUTC.toLocaleTimeString('en-US', {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false,
+        timeZone: 'local'
+      });
+      
+      const localDateString = meetingStartUTC.toLocaleDateString('en-US', {
         weekday: 'short',
         month: 'short',
         day: 'numeric',
-        year: 'numeric'
+        year: 'numeric',
+        timeZone: 'local'
       });
       
       // Update local time display
@@ -168,11 +177,7 @@ const jsonLd = {
       const localDateElement = document.getElementById('local-date');
       
       if (localTimeElement) {
-        localTimeElement.textContent = `${localTimeString} - ${new Date(localMeetingTime.getTime() + 90 * 60000).toLocaleTimeString('en-US', {
-          hour: 'numeric',
-          minute: '2-digit',
-          hour12: true
-        })}`;
+        localTimeElement.textContent = `${localStartTime} - ${localEndTime}`;
       }
       
       if (localDateElement) {
@@ -394,6 +399,7 @@ const jsonLd = {
     font-size: 0.75rem;
     color: #f5f5f0;
     opacity: 0.7;
+    font-family: 'Manrope', sans-serif;
   }
   
   /* Mobile responsive */
