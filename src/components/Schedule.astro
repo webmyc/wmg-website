@@ -77,13 +77,23 @@ const jsonLd = {
       every last tuesday of the month, 4:00 - 5:30 pm UTC.
     </p>
     
-    <!-- Next Meeting Section -->
-    <div class="mb-8 sm:mb-12 text-center">
-      <h3 class="text-xl sm:text-2xl font-semibold text-wmg-gold mb-6">
-        Next meeting
-      </h3>
-      <div class="flex justify-center">
-        <div class="custom-time-widget">
+        <!-- Next Meeting Section -->
+        <div class="mb-8 sm:mb-12 text-center">
+          <h3 class="text-xl sm:text-2xl font-semibold text-wmg-gold mb-6">
+            Next meeting
+          </h3>
+          <!-- Refresh button for testing timezone detection -->
+          <div class="mb-4">
+            <button 
+              id="refresh-timezone" 
+              class="text-xs text-wmg-text/60 hover:text-wmg-gold transition-colors underline"
+              title="Refresh timezone detection (useful when changing VPN)"
+            >
+              🔄 Refresh Timezone
+            </button>
+          </div>
+          <div class="flex justify-center">
+            <div class="custom-time-widget">
           <div class="time-display">
             <div class="utc-time">
               <span class="time-value">4:00 PM - 5:30 PM</span>
@@ -146,19 +156,56 @@ const jsonLd = {
         let detectedTimezone = null;
         
         // Function to detect timezone from IP
-        async function detectTimezoneFromIP() {
+        async function detectTimezoneFromIP(forceRefresh = false) {
+          // Check if we're in development (localhost) or production
+          const isDevelopment = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+          
+          if (isDevelopment) {
+            console.log('Development mode: Using browser timezone (CORS blocks IP detection from localhost)');
+            detectedTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+            console.log('Using browser timezone:', detectedTimezone);
+            return detectedTimezone;
+          }
+          
           try {
-            // Use a free timezone detection service
-            const response = await fetch('https://worldtimeapi.org/api/ip');
-            const data = await response.json();
+            // In production, try timezone detection services
+            const services = [
+              'https://worldtimeapi.org/api/ip', // Primary service
+              'https://ipapi.co/json/' // Backup service
+            ];
             
-            if (data.timezone) {
-              detectedTimezone = data.timezone;
-              console.log('Detected timezone from IP:', detectedTimezone);
-              return detectedTimezone;
+            for (const service of services) {
+              try {
+                console.log(`Trying timezone service: ${service}`);
+                const response = await fetch(service, {
+                  cache: forceRefresh ? 'no-cache' : 'default'
+                });
+                
+                if (!response.ok) continue;
+                
+                const data = await response.json();
+                console.log('Service response:', data);
+                
+                // Handle different response formats
+                let timezone = null;
+                if (data.timezone) {
+                  timezone = data.timezone;
+                } else if (data.time_zone) {
+                  timezone = data.time_zone;
+                }
+                
+                if (timezone) {
+                  detectedTimezone = timezone;
+                  console.log('Detected timezone from IP:', detectedTimezone, 'Client IP:', data.client_ip || data.ip || 'unknown');
+                  return detectedTimezone;
+                }
+              } catch (serviceError) {
+                console.log(`Service ${service} failed:`, serviceError.message);
+                continue;
+              }
             }
           } catch (error) {
-            console.log('IP timezone detection failed, falling back to browser timezone:', error);
+            console.log('All IP timezone detection services failed, falling back to browser timezone:', error);
           }
           
           // Fallback to browser timezone
@@ -257,12 +304,27 @@ const jsonLd = {
           updateTimeDisplay();
         }
         
+        // Refresh timezone detection
+        async function refreshTimezone() {
+          console.log('Manually refreshing timezone detection...');
+          await detectTimezoneFromIP(true); // Force refresh
+          updateTimeDisplay();
+        }
+        
         // Initialize when DOM is ready or immediately if already loaded
         if (document.readyState === 'loading') {
           document.addEventListener('DOMContentLoaded', initializeWidget);
         } else {
           initializeWidget();
         }
+        
+        // Add refresh button event listener
+        document.addEventListener('DOMContentLoaded', function() {
+          const refreshBtn = document.getElementById('refresh-timezone');
+          if (refreshBtn) {
+            refreshBtn.addEventListener('click', refreshTimezone);
+          }
+        });
         
         // Update every minute
         setInterval(updateTimeDisplay, 60000);
