@@ -5,7 +5,7 @@ import sitemap from '@astrojs/sitemap';
 // https://astro.build/config
 export default defineConfig({
   site: 'https://wholemengathering.org',
-  output: 'static',
+  output: 'server',
   outDir: 'dist',
   integrations: [
     tailwind(),
