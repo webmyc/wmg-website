@@ -229,12 +229,12 @@
         }
 
         // Step 2: Add subscriber to form
-        const formData = {
+        const formSubmissionData = {
           email_address: email.trim(),
           referrer: window.location.href
         };
 
-        console.log('Step 2: Adding to form with data:', formData);
+        console.log('Step 2: Adding to form with data:', formSubmissionData);
         console.log('Form ID: 8691345');
 
         const formResponse = await fetch('https://api.kit.com/v4/forms/8691345/subscribers', {
@@ -243,7 +243,7 @@
             'Content-Type': 'application/json',
             'X-Kit-Api-Key': 'kit_f0daccaf0af91cdbbd79504974c315a6'
           },
-          body: JSON.stringify(formData)
+          body: JSON.stringify(formSubmissionData)
         });
 
         console.log('Add to form response status:', formResponse.status);
