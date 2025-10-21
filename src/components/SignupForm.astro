@@ -251,6 +251,35 @@
         // 200 means already on the form, 201 means created
         if (formResponse.status === 200 || formResponse.status === 201) {
           console.log('Successfully added to form!');
+          
+          // Step 3: Add "wmg" tag to subscriber
+          const tagData = {
+            email_address: email.trim()
+          };
+
+          console.log('Step 3: Adding wmg tag with data:', tagData);
+
+          try {
+            const tagResponse = await fetch('https://api.kit.com/v4/tags/wmg/subscribers', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'X-Kit-Api-Key': 'kit_f0daccaf0af91cdbbd79504974c315a6'
+              },
+              body: JSON.stringify(tagData)
+            });
+
+            console.log('Add tag response status:', tagResponse.status);
+
+            if (tagResponse.status === 200 || tagResponse.status === 201) {
+              console.log('Successfully added wmg tag!');
+            } else {
+              console.log('Tag addition failed, but subscriber was added to form');
+            }
+          } catch (tagError) {
+            console.log('Tag addition failed, but subscriber was added to form:', tagError);
+          }
+
           showMessage('Welcome to the gathering! You\'ll receive the live link and updates soon.');
           form.reset();
           trackFormEvent('submit', 'signup_form', { status: 'success' });
