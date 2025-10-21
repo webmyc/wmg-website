@@ -43,23 +43,22 @@ export const POST: APIRoute = async ({ request }) => {
       });
     }
 
-    // Prepare data for Kit.com API
+    // Prepare data for Kit.com V4 API
     const kitData = {
-      name: name.trim(),
       email: email.trim(),
-      source: 'wmg-website',
-      timestamp: new Date().toISOString(),
-      // Add any additional fields that Kit.com expects
+      first_name: name.trim(),
+      // Add any additional fields that Kit.com V4 expects
       tags: ['wmg', 'whole-men-gathering', 'signup'],
-      metadata: {
+      custom_fields: {
+        source: 'wmg-website',
         form_type: 'community_signup',
-        website: 'wmg.suuna.org'
+        website: 'wmg.suuna.org',
+        signup_date: new Date().toISOString()
       }
     };
 
-    // Make request to Kit.com API
-    // Note: The actual endpoint URL may need to be adjusted based on Kit.com's API documentation
-    const kitResponse = await fetch('https://api.kit.com/v1/contacts', {
+    // Make request to Kit.com V4 API
+    const kitResponse = await fetch('https://api.kit.com/v4/subscribers', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${kitApiKey}`,
