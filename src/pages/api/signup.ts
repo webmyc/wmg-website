@@ -1,10 +1,13 @@
 import type { APIRoute } from 'astro';
 
 export const POST: APIRoute = async ({ request }) => {
+  console.log('API endpoint called');
   try {
     const formData = await request.formData();
     const name = formData.get('name') as string;
     const email = formData.get('email') as string;
+    
+    console.log('Received form data:', { name, email });
 
     // Validate required fields
     if (!name || !email) {
@@ -32,6 +35,9 @@ export const POST: APIRoute = async ({ request }) => {
     // Get API key from environment variables
     const kitApiKey = import.meta.env.KIT_KEY;
     
+    console.log('API key available:', !!kitApiKey);
+    console.log('API key prefix:', kitApiKey ? kitApiKey.substring(0, 10) + '...' : 'none');
+    
     if (!kitApiKey) {
       console.error('KIT_KEY environment variable is not set');
       return new Response(JSON.stringify({ 
@@ -58,6 +64,8 @@ export const POST: APIRoute = async ({ request }) => {
     };
 
     // Make request to Kit.com V4 API
+    console.log('Making request to Kit.com API with data:', kitData);
+    
     const kitResponse = await fetch('https://api.kit.com/v4/subscribers', {
       method: 'POST',
       headers: {
@@ -67,6 +75,9 @@ export const POST: APIRoute = async ({ request }) => {
       },
       body: JSON.stringify(kitData)
     });
+
+    console.log('Kit.com API response status:', kitResponse.status);
+    console.log('Kit.com API response headers:', Object.fromEntries(kitResponse.headers.entries()));
 
     if (!kitResponse.ok) {
       const errorText = await kitResponse.text();
@@ -82,6 +93,7 @@ export const POST: APIRoute = async ({ request }) => {
     }
 
     const kitResult = await kitResponse.json();
+    console.log('Kit.com API success response:', kitResult);
     
     return new Response(JSON.stringify({ 
       success: true, 
@@ -94,6 +106,11 @@ export const POST: APIRoute = async ({ request }) => {
 
   } catch (error) {
     console.error('Signup API error:', error);
+    console.error('Error details:', {
+      message: error instanceof Error ? error.message : 'Unknown error',
+      stack: error instanceof Error ? error.stack : undefined,
+      type: typeof error
+    });
     
     return new Response(JSON.stringify({ 
       success: false, 

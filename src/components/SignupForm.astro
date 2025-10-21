@@ -198,7 +198,13 @@
       submitLoading.classList.remove('hidden');
 
       try {
+        console.log('Form submission started');
         const formData = new FormData(form);
+        console.log('Form data:', {
+          name: formData.get('name'),
+          email: formData.get('email')
+        });
+
         const response = await fetch(form.action, {
           method: 'POST',
           body: formData,
@@ -207,17 +213,33 @@
           }
         });
 
-        const result = await response.json();
+        console.log('Response status:', response.status);
+        console.log('Response headers:', Object.fromEntries(response.headers.entries()));
+
+        let result;
+        try {
+          result = await response.json();
+          console.log('Response JSON:', result);
+        } catch (jsonError) {
+          console.error('JSON parse error:', jsonError);
+          const textResponse = await response.text();
+          console.log('Response text:', textResponse);
+          throw new Error('Invalid response format from server');
+        }
 
         if (response.ok && result.success) {
+          console.log('Form submission successful');
           showMessage(result.message || 'Welcome to the gathering! You\'ll receive the live link and updates soon.');
           form.reset();
           trackFormEvent('submit', 'signup_form', { status: 'success' });
         } else {
+          console.error('Form submission failed:', result);
           throw new Error(result.error || 'Form submission failed');
         }
       } catch (error) {
+        console.error('Form submission error:', error);
         const errorMessage = error instanceof Error ? error.message : 'Something went wrong. Please try again.';
+        console.log('Showing error message:', errorMessage);
         showMessage(errorMessage, true);
         trackFormEvent('error', 'signup_form', { error: 'submission_failed' });
       } finally {
