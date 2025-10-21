@@ -219,11 +219,10 @@
         console.log('Sending data to Kit.com:', kitData);
         console.log('API Key being used:', 'kit_f0daccaf0af91cdbbd79504974c315a6');
 
-        // Send directly to Kit.com API - try different auth formats
-        const response = await fetch('https://api.kit.com/v4/subscribers', {
+        // Send directly to Kit.com API - try API key as query parameter
+        const response = await fetch('https://api.kit.com/v4/subscribers?api_key=kit_f0daccaf0af91cdbbd79504974c315a6', {
           method: 'POST',
           headers: {
-            'Authorization': 'kit_f0daccaf0af91cdbbd79504974c315a6',
             'Content-Type': 'application/json',
             'Accept': 'application/json',
             'User-Agent': 'WMG-Website/1.0'
