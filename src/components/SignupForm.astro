@@ -25,7 +25,7 @@
     <div class="bg-wmg-bg/50 backdrop-blur-sm border border-wmg-gold/20 rounded-2xl p-6 sm:p-8 shadow-2xl shadow-wmg-gold/10 fade-up">
       <form 
         class="space-y-6"
-        action={`https://formspree.io/f/${import.meta.env.PUBLIC_FORMSPREE_ID || 'your-formspree-id'}`}
+        action="/api/signup"
         method="POST"
         id="signup-form"
       >
@@ -207,15 +207,18 @@
           }
         });
 
-        if (response.ok) {
-          showMessage('Welcome to the gathering! You\'ll receive the live link and updates soon.');
+        const result = await response.json();
+
+        if (response.ok && result.success) {
+          showMessage(result.message || 'Welcome to the gathering! You\'ll receive the live link and updates soon.');
           form.reset();
           trackFormEvent('submit', 'signup_form', { status: 'success' });
         } else {
-          throw new Error('Form submission failed');
+          throw new Error(result.error || 'Form submission failed');
         }
       } catch (error) {
-        showMessage('Something went wrong. Please try again.', true);
+        const errorMessage = error instanceof Error ? error.message : 'Something went wrong. Please try again.';
+        showMessage(errorMessage, true);
         trackFormEvent('error', 'signup_form', { error: 'submission_failed' });
       } finally {
         // Reset button state

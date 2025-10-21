@@ -143,7 +143,7 @@ const jsonLd = {
         const meetingDate = new Date('2025-10-28T16:00:00Z');
         
         // Cache for timezone info
-        let detectedTimezone = null;
+        let detectedTimezone: string | null = null;
         
         // Function to detect timezone from IP
         async function detectTimezoneFromIP(forceRefresh = false) {
@@ -190,7 +190,7 @@ const jsonLd = {
                   return detectedTimezone;
                 }
               } catch (serviceError) {
-                console.log(`Service ${service} failed:`, serviceError.message);
+                console.log(`Service ${service} failed:`, (serviceError as Error).message);
                 continue;
               }
             }
@@ -275,9 +275,9 @@ const jsonLd = {
         const hoursElement = document.getElementById('countdown-hours');
         const minutesElement = document.getElementById('countdown-minutes');
         
-        if (daysElement) daysElement.textContent = days;
-        if (hoursElement) hoursElement.textContent = hours;
-        if (minutesElement) minutesElement.textContent = minutes;
+        if (daysElement) daysElement.textContent = days.toString();
+        if (hoursElement) hoursElement.textContent = hours.toString();
+        if (minutesElement) minutesElement.textContent = minutes.toString();
       } else {
         // Meeting has passed
         const daysElement = document.getElementById('countdown-days');

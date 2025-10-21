@@ -6,8 +6,8 @@ function track(eventName: string, properties?: Record<string, any>) {
   console.log('Analytics Event:', eventName, properties);
   
   // Send to custom analytics endpoint or third-party service
-  if (typeof window !== 'undefined' && window.gtag) {
-    window.gtag('event', eventName, properties);
+  if (typeof window !== 'undefined' && (window as any).gtag) {
+    (window as any).gtag('event', eventName, properties);
   }
   
   // Future: Send to Vercel Analytics when properly configured
