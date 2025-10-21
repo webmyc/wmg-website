@@ -252,15 +252,16 @@
         if (formResponse.status === 200 || formResponse.status === 201) {
           console.log('Successfully added to form!');
           
-          // Step 3: Add "wmg" tag to subscriber
+          // Step 3: Add "wmg" tag to subscriber using tag ID
           const tagData = {
             email_address: email.trim()
           };
 
           console.log('Step 3: Adding wmg tag with data:', tagData);
+          console.log('Using tag ID: 11859619');
 
           try {
-            const tagResponse = await fetch('https://api.kit.com/v4/tags/wmg/subscribers', {
+            const tagResponse = await fetch('https://api.kit.com/v4/tags/11859619/subscribers', {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
@@ -271,10 +272,12 @@
 
             console.log('Add tag response status:', tagResponse.status);
 
+            // 200 means already tagged, 201 means newly tagged
             if (tagResponse.status === 200 || tagResponse.status === 201) {
               console.log('Successfully added wmg tag!');
             } else {
-              console.log('Tag addition failed, but subscriber was added to form');
+              const errorText = await tagResponse.text();
+              console.log('Tag addition failed, but subscriber was added to form:', tagResponse.status, errorText);
             }
           } catch (tagError) {
             console.log('Tag addition failed, but subscriber was added to form:', tagError);
