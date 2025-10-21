@@ -23,9 +23,10 @@ import Footer from '../components/Footer.astro';
 <script>
   if (typeof window !== 'undefined') {
     requestAnimationFrame(() => {
-      // Simple reveal function
-      const elements = document.querySelectorAll('.reveal');
+      // Simple reveal function for all fade-up elements
+      const elements = document.querySelectorAll('.fade-up, .reveal');
         elements.forEach(el => {
+          el.classList.add('reveal');
           (el as HTMLElement).style.opacity = '1';
           (el as HTMLElement).style.transform = 'translateY(0)';
         });
