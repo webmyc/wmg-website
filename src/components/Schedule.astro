@@ -163,9 +163,11 @@ const jsonLd = {
 
 <script type="application/ld+json" set:html={JSON.stringify(jsonLd)}></script>
 
-<script id="meetings-data" type="application/json">
-  {JSON.stringify(gatherings)}
-</script>
+<script
+  id="meetings-data"
+  type="application/json"
+  set:html={JSON.stringify(gatherings)}
+></script>
 
     <script>
       // Time widget functionality
