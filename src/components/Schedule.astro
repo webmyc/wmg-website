@@ -145,27 +145,30 @@ const jsonLd = {
     </div>
     
     <ul class="space-y-10 sm:space-y-14">
-      {gatherings.map((gathering, index) => {
-        const meetingStartDateTime = new Date(`${gathering.date}T${gathering.time}:00Z`);
+      {gatherings.map((gathering) => {
         const meetingEndDateTime = new Date(`${gathering.date}T${gathering.endTime}:00Z`);
-        // A meeting is past if its end time has passed
         const isPast = meetingEndDateTime <= now;
         return (
-        <li class={`gathering-item reveal flex items-start ${isPast ? 'opacity-50' : ''}`}>
-          <div class={`w-1 mr-4 sm:mr-6 flex-shrink-0 ${isPast ? 'bg-wmg-gold/40' : 'bg-wmg-gold'}`} style="min-height: 60px;"></div>
-          <div class="flex-1">
-            <div class={`text-sm sm:text-base font-semibold mb-2 ${isPast ? 'text-wmg-gold/60' : 'text-wmg-gold'}`}>
-              {new Date(gathering.date).toLocaleDateString('en-US', { 
-                month: 'long', 
-                day: 'numeric',
-                year: 'numeric'
-              })}
+          <li
+            class={`gathering-item reveal flex items-start ${isPast ? 'opacity-50' : ''}`}
+          >
+            <div
+              class={`w-1 mr-4 sm:mr-6 flex-shrink-0 ${isPast ? 'bg-wmg-gold/40' : 'bg-wmg-gold'}`}
+              style="min-height: 60px;"
+            ></div>
+            <div class="flex-1">
+              <div class={`text-sm sm:text-base font-semibold mb-2 ${isPast ? 'text-wmg-gold/60' : 'text-wmg-gold'}`}>
+                {new Date(gathering.date).toLocaleDateString('en-US', { 
+                  month: 'long', 
+                  day: 'numeric',
+                  year: 'numeric'
+                })}
+              </div>
+              <h3 class={`font-bold leading-tight ${isPast ? 'text-wmg-text/60' : 'text-wmg-text'}`} style="font-size: 33px;">
+                {gathering.title}
+              </h3>
             </div>
-            <h3 class={`font-bold leading-tight ${isPast ? 'text-wmg-text/60' : 'text-wmg-text'}`} style="font-size: 33px;">
-              {gathering.title}
-            </h3>
-          </div>
-        </li>
+          </li>
         );
       })}
     </ul>
