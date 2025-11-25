@@ -4,26 +4,26 @@
 const gatherings = [
   {
     date: "2025-10-28",
-    time: "16:00",
-    endTime: "17:30",
+    time: "17:00",
+    endTime: "18:30",
     title: "The Gift of Man in todays fast changing world - being of service to the whole"
   },
   {
     date: "2025-11-25", 
-    time: "16:00",
-    endTime: "17:30",
+    time: "17:00",
+    endTime: "18:30",
     title: "The Siddhis of Manhood, our highest becoming"
   },
   {
     date: "2025-12-30",
-    time: "16:00", 
-    endTime: "17:30",
+    time: "17:00", 
+    endTime: "18:30",
     title: "The wholesome man- integrating our shadows, gifts and Siddhis into everyday life"
   },
   {
     date: "2026-01-27",
-    time: "16:00",
-    endTime: "17:30", 
+    time: "17:00",
+    endTime: "18:30", 
     title: "Bringing our highest vision into form - envisioning  the year ahead"
   }
 ];
@@ -82,7 +82,7 @@ const jsonLd = {
     </h2>
     
     <p class="text-lg sm:text-xl md:text-2xl text-wmg-text/80 mb-6 sm:mb-8 text-center section-subtitle">
-      every last tuesday of the month, 4:00 - 5:30 pm UTC.
+      every last tuesday of the month, 5:00 - 6:30 pm UTC.
     </p>
     
         <!-- Next Meeting Section -->
@@ -94,7 +94,7 @@ const jsonLd = {
             <div class="custom-time-widget" data-next-meeting-date={nextMeeting?.date || gatherings[0].date} data-next-meeting-time={nextMeeting?.time || gatherings[0].time} data-next-meeting-end-time={nextMeeting?.endTime || gatherings[0].endTime}>
           <div class="time-display">
             <div class="utc-time">
-              <span class="time-value">4:00 PM - 5:30 PM</span>
+              <span class="time-value">5:00 PM - 6:30 PM</span>
               <span class="time-label">UTC Time</span>
               <span class="timezone-info-small" id="utc-date">
                 {nextMeeting ? new Date(`${nextMeeting.date}T16:00:00Z`).toLocaleDateString('en-US', {
