@@ -35,17 +35,6 @@ const nextMeeting = gatherings.find((gathering) => {
   return meetingEndDateTime > now;
 });
 
-// Separate past and upcoming meetings
-const pastMeetings = gatherings.filter(gathering => {
-  const meetingDateTime = new Date(`${gathering.date}T${gathering.endTime}:00Z`);
-  return meetingDateTime <= now;
-});
-
-const upcomingMeetings = gatherings.filter(gathering => {
-  const meetingDateTime = new Date(`${gathering.date}T${gathering.endTime}:00Z`);
-  return meetingDateTime > now;
-});
-
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "Organization",
@@ -145,85 +134,135 @@ const jsonLd = {
     </div>
     
     <ul class="space-y-10 sm:space-y-14">
-      {gatherings.map((gathering) => {
-        const meetingEndDateTime = new Date(`${gathering.date}T${gathering.endTime}:00Z`);
-        const isPast = meetingEndDateTime <= now;
-        return (
-          <li
-            class={`gathering-item reveal flex items-start ${isPast ? 'opacity-50' : ''}`}
-          >
-            <div
-              class={`w-1 mr-4 sm:mr-6 flex-shrink-0 ${isPast ? 'bg-wmg-gold/40' : 'bg-wmg-gold'}`}
-              style="min-height: 60px;"
-            ></div>
-            <div class="flex-1">
-              <div class={`text-sm sm:text-base font-semibold mb-2 ${isPast ? 'text-wmg-gold/60' : 'text-wmg-gold'}`}>
-                {new Date(gathering.date).toLocaleDateString('en-US', { 
-                  month: 'long', 
-                  day: 'numeric',
-                  year: 'numeric'
-                })}
-              </div>
-              <h3 class={`font-bold leading-tight ${isPast ? 'text-wmg-text/60' : 'text-wmg-text'}`} style="font-size: 33px;">
-                {gathering.title}
-              </h3>
+      {gatherings.map((gathering) => (
+        <li 
+          class="gathering-item reveal flex items-start"
+          data-meeting-end={`${gathering.date}T${gathering.endTime}:00Z`}
+        >
+          <div
+            class="w-1 mr-4 sm:mr-6 flex-shrink-0 timeline-marker"
+            style="min-height: 60px;"
+          ></div>
+          <div class="flex-1">
+            <div class="text-sm sm:text-base font-semibold mb-2 gathering-date">
+              {new Date(gathering.date).toLocaleDateString('en-US', { 
+                month: 'long', 
+                day: 'numeric',
+                year: 'numeric'
+              })}
             </div>
-          </li>
-        );
-      })}
+            <h3 class="font-bold leading-tight gathering-title" style="font-size: 33px;">
+              {gathering.title}
+            </h3>
+          </div>
+        </li>
+      ))}
     </ul>
   </div>
 </section>
 
 <script type="application/ld+json" set:html={JSON.stringify(jsonLd)}></script>
 
+<script id="meetings-data" type="application/json">
+  {JSON.stringify(gatherings)}
+</script>
+
     <script>
       // Time widget functionality
       function initTimeWidget() {
-        // Get next meeting data from the widget element
         const widgetElement = document.querySelector('.custom-time-widget');
         if (!widgetElement) {
           console.error('Time widget element not found');
           return;
         }
         
-        const meetingDateStr = widgetElement.getAttribute('data-next-meeting-date');
-        const meetingTimeStr = widgetElement.getAttribute('data-next-meeting-time');
-        const meetingEndTimeStr = widgetElement.getAttribute('data-next-meeting-end-time');
+        const meetingsDataElement = document.getElementById('meetings-data');
+        const meetingsData = meetingsDataElement ? JSON.parse(meetingsDataElement.textContent || '[]') : [];
+        
+        let meetingDateStr = widgetElement.getAttribute('data-next-meeting-date');
+        let meetingTimeStr = widgetElement.getAttribute('data-next-meeting-time');
+        let meetingEndTimeStr = widgetElement.getAttribute('data-next-meeting-end-time');
         
         if (!meetingDateStr || !meetingTimeStr || !meetingEndTimeStr) {
           console.error('Next meeting data not found');
           return;
         }
         
-        // Create meeting date in UTC
-        const meetingDate = new Date(`${meetingDateStr}T${meetingTimeStr}:00Z`);
-        
-        // Cache for timezone info
+        let meetingDate = new Date(`${meetingDateStr}T${meetingTimeStr}:00Z`);
         let detectedTimezone: string | null = null;
+        let currentMeetingKey = `${meetingDateStr}-${meetingTimeStr}`;
         
-        // Function to detect timezone from IP
+        function applyMeetingData(meeting) {
+          meetingDateStr = meeting.date;
+          meetingTimeStr = meeting.time;
+          meetingEndTimeStr = meeting.endTime;
+          currentMeetingKey = `${meetingDateStr}-${meetingTimeStr}`;
+          
+          widgetElement.setAttribute('data-next-meeting-date', meetingDateStr);
+          widgetElement.setAttribute('data-next-meeting-time', meetingTimeStr);
+          widgetElement.setAttribute('data-next-meeting-end-time', meetingEndTimeStr);
+          
+          meetingDate = new Date(`${meetingDateStr}T${meetingTimeStr}:00Z`);
+          
+          const utcDateElement = document.getElementById('utc-date');
+          if (utcDateElement) {
+            const utcDate = new Date(`${meetingDateStr}T${meetingTimeStr}:00Z`);
+            utcDateElement.textContent = utcDate.toLocaleDateString('en-US', {
+              weekday: 'short',
+              month: 'short',
+              day: 'numeric',
+              year: 'numeric',
+              timeZone: 'UTC'
+            });
+          }
+        }
+        
+        function updateMeetingState() {
+          if (!meetingsData.length) return;
+          
+          const now = new Date();
+          let next = meetingsData.find((meeting) => {
+            const meetingEnd = new Date(`${meeting.date}T${meeting.endTime}:00Z`);
+            return meetingEnd > now;
+          });
+          
+          if (!next) {
+            next = meetingsData[meetingsData.length - 1];
+          }
+          
+          const nextKey = `${next.date}-${next.time}`;
+          if (nextKey !== currentMeetingKey) {
+            applyMeetingData(next);
+          }
+          
+          document.querySelectorAll('.gathering-item').forEach((item) => {
+            const endISO = item.getAttribute('data-meeting-end');
+            if (!endISO) return;
+            const endDate = new Date(endISO);
+            if (endDate <= now) {
+              item.classList.add('past-meeting');
+            } else {
+              item.classList.remove('past-meeting');
+            }
+          });
+        }
+        
         async function detectTimezoneFromIP(forceRefresh = false) {
-          // Check if we're in development (localhost) or production
           const isDevelopment = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
           
           if (isDevelopment) {
-            console.log('Development mode: Using browser timezone (CORS blocks IP detection from localhost)');
             detectedTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-            console.log('Using browser timezone:', detectedTimezone);
             return detectedTimezone;
           }
           
           try {
-            // In production, try timezone detection services
             const services = [
-              'https://worldtimeapi.org/api/ip', // Primary service
-              'https://ipapi.co/json/' // Backup service
+              'https://worldtimeapi.org/api/ip',
+              'https://ipapi.co/json/'
             ];
             
             for (const service of services) {
               try {
-                console.log(`Trying timezone service: ${service}`);
                 const response = await fetch(service, {
                   cache: forceRefresh ? 'no-cache' : 'default'
                 });
@@ -231,9 +270,6 @@ const jsonLd = {
                 if (!response.ok) continue;
                 
                 const data = await response.json();
-                console.log('Service response:', data);
-                
-                // Handle different response formats
                 let timezone = null;
                 if (data.timezone) {
                   timezone = data.timezone;
@@ -243,11 +279,9 @@ const jsonLd = {
                 
                 if (timezone) {
                   detectedTimezone = timezone;
-                  console.log('Detected timezone from IP:', detectedTimezone, 'Client IP:', data.client_ip || data.ip || 'unknown');
                   return detectedTimezone;
                 }
               } catch (serviceError) {
-                console.log(`Service ${service} failed:`, (serviceError as Error).message);
                 continue;
               }
             }
@@ -255,23 +289,17 @@ const jsonLd = {
             console.log('All IP timezone detection services failed, falling back to browser timezone:', error);
           }
           
-          // Fallback to browser timezone
           detectedTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-          console.log('Using browser timezone:', detectedTimezone);
           return detectedTimezone;
         }
         
         function updateTimeDisplay() {
           const now = new Date();
-          
-          // Create meeting times as UTC dates - these are the source times
           const meetingStartUTC = new Date(`${meetingDateStr}T${meetingTimeStr}:00.000Z`);
           const meetingEndUTC = new Date(`${meetingDateStr}T${meetingEndTimeStr}:00.000Z`);
           
-          // Use detected timezone or browser timezone
           const timezone = detectedTimezone || Intl.DateTimeFormat().resolvedOptions().timeZone;
           
-          // Convert to local time using the detected timezone
           const localStartTimeString = meetingStartUTC.toLocaleTimeString('en-US', {
             hour: 'numeric',
             minute: '2-digit',
@@ -294,22 +322,8 @@ const jsonLd = {
             timeZone: timezone
           });
           
-          // Update local time display
           const localTimeElement = document.getElementById('local-time');
           const localDateElement = document.getElementById('local-date');
-          
-          console.log('Timezone conversion:', {
-            utcTime: `${meetingTimeStr}-${meetingEndTimeStr}`,
-            localStartTimeString,
-            localEndTimeString,
-            localDateString,
-            detectedTimezone: timezone,
-            browserTimezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-            elementsFound: {
-              localTimeElement: !!localTimeElement,
-              localDateElement: !!localDateElement
-            }
-          });
           
           if (localTimeElement) {
             localTimeElement.textContent = `${localStartTimeString} - ${localEndTimeString}`;
@@ -319,58 +333,53 @@ const jsonLd = {
             localDateElement.textContent = localDateString;
           }
       
-      // Calculate countdown
-      const timeDiff = meetingDate.getTime() - now.getTime();
-      
-      if (timeDiff > 0) {
-        const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+          const timeDiff = meetingDate.getTime() - now.getTime();
+          
+          if (timeDiff > 0) {
+            const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+            
+            const daysElement = document.getElementById('countdown-days');
+            const hoursElement = document.getElementById('countdown-hours');
+            const minutesElement = document.getElementById('countdown-minutes');
+            
+            if (daysElement) daysElement.textContent = days.toString();
+            if (hoursElement) hoursElement.textContent = hours.toString();
+            if (minutesElement) minutesElement.textContent = minutes.toString();
+          } else {
+            const daysElement = document.getElementById('countdown-days');
+            const detailsElement = document.getElementById('countdown-details');
+            
+            if (daysElement) daysElement.textContent = '0';
+            if (detailsElement) detailsElement.textContent = 'Meeting has started';
+          }
+        }
         
-        // Update countdown display
-        const daysElement = document.getElementById('countdown-days');
-        const hoursElement = document.getElementById('countdown-hours');
-        const minutesElement = document.getElementById('countdown-minutes');
-        
-        if (daysElement) daysElement.textContent = days.toString();
-        if (hoursElement) hoursElement.textContent = hours.toString();
-        if (minutesElement) minutesElement.textContent = minutes.toString();
-      } else {
-        // Meeting has passed
-        const daysElement = document.getElementById('countdown-days');
-        const detailsElement = document.getElementById('countdown-details');
-        
-        if (daysElement) daysElement.textContent = '0';
-        if (detailsElement) detailsElement.textContent = 'Meeting has started';
-      }
-    }
-    
-        // Initialize timezone detection and then update display
         async function initializeWidget() {
           await detectTimezoneFromIP();
+          updateMeetingState();
           updateTimeDisplay();
         }
         
-        
-        // Initialize when DOM is ready or immediately if already loaded
         if (document.readyState === 'loading') {
           document.addEventListener('DOMContentLoaded', initializeWidget);
         } else {
           initializeWidget();
         }
         
-        
-        // Update every minute
-        setInterval(updateTimeDisplay, 60000);
+        setInterval(() => {
+          updateMeetingState();
+          updateTimeDisplay();
+        }, 60000);
       }
 
-      // Initialize when DOM is ready or immediately if already loaded
       if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', initTimeWidget);
       } else {
         initTimeWidget();
       }
-</script>
+    </script>
 
 <style>
   /* Organic floating animations */
@@ -555,6 +564,10 @@ const jsonLd = {
     font-family: 'Manrope', sans-serif;
   }
   
+  .timeline-marker {
+    background-color: #d4af37;
+  }
+  
   /* Mobile responsive */
   @media (max-width: 640px) {
     .time-display {
@@ -633,6 +646,19 @@ const jsonLd = {
   .gathering-item.reveal {
     opacity: 1;
     transform: translateY(0);
+  }
+  
+  .gathering-item.past-meeting {
+    opacity: 0.45;
+  }
+  
+  .gathering-item.past-meeting .timeline-marker {
+    background-color: rgba(212, 175, 55, 0.4);
+  }
+  
+  .gathering-item.past-meeting .gathering-date,
+  .gathering-item.past-meeting .gathering-title {
+    color: rgba(245, 245, 240, 0.6);
   }
 
   /* Respect reduced motion */
