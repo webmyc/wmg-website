@@ -31,8 +31,8 @@ const gatherings = [
 // Calculate next upcoming meeting
 const now = new Date();
 const nextMeeting = gatherings.find(gathering => {
-  const meetingDateTime = new Date(`${gathering.date}T${gathering.endTime}:00Z`);
-  return meetingDateTime > now;
+  const meetingStartDateTime = new Date(`${gathering.date}T${gathering.time}:00Z`);
+  return meetingStartDateTime > now;
 });
 
 // Separate past and upcoming meetings
@@ -146,8 +146,10 @@ const jsonLd = {
     
     <ul class="space-y-10 sm:space-y-14">
       {gatherings.map((gathering, index) => {
-        const meetingDateTime = new Date(`${gathering.date}T${gathering.endTime}:00Z`);
-        const isPast = meetingDateTime <= now;
+        const meetingStartDateTime = new Date(`${gathering.date}T${gathering.time}:00Z`);
+        const meetingEndDateTime = new Date(`${gathering.date}T${gathering.endTime}:00Z`);
+        // A meeting is past if its end time has passed
+        const isPast = meetingEndDateTime <= now;
         return (
         <li class={`gathering-item reveal flex items-start ${isPast ? 'opacity-50' : ''}`}>
           <div class={`w-1 mr-4 sm:mr-6 flex-shrink-0 ${isPast ? 'bg-wmg-gold/40' : 'bg-wmg-gold'}`} style="min-height: 60px;"></div>
