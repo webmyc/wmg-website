@@ -28,6 +28,24 @@ const gatherings = [
   }
 ];
 
+// Calculate next upcoming meeting
+const now = new Date();
+const nextMeeting = gatherings.find(gathering => {
+  const meetingDateTime = new Date(`${gathering.date}T${gathering.endTime}:00Z`);
+  return meetingDateTime > now;
+});
+
+// Separate past and upcoming meetings
+const pastMeetings = gatherings.filter(gathering => {
+  const meetingDateTime = new Date(`${gathering.date}T${gathering.endTime}:00Z`);
+  return meetingDateTime <= now;
+});
+
+const upcomingMeetings = gatherings.filter(gathering => {
+  const meetingDateTime = new Date(`${gathering.date}T${gathering.endTime}:00Z`);
+  return meetingDateTime > now;
+});
+
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "Organization",
@@ -78,17 +96,26 @@ const jsonLd = {
     </p>
     
         <!-- Next Meeting Section -->
+        {nextMeeting && (
         <div class="mb-8 sm:mb-12 text-center">
           <h3 class="text-xl sm:text-2xl font-semibold text-wmg-gold mb-6">
             Next meeting
           </h3>
           <div class="flex justify-center">
-            <div class="custom-time-widget">
+            <div class="custom-time-widget" data-next-meeting-date={nextMeeting.date} data-next-meeting-time={nextMeeting.time} data-next-meeting-end-time={nextMeeting.endTime}>
           <div class="time-display">
             <div class="utc-time">
               <span class="time-value">4:00 PM - 5:30 PM</span>
               <span class="time-label">UTC Time</span>
-              <span class="timezone-info-small">Tue, Oct 28 2025</span>
+              <span class="timezone-info-small" id="utc-date">
+                {new Date(`${nextMeeting.date}T16:00:00Z`).toLocaleDateString('en-US', {
+                  weekday: 'short',
+                  month: 'short',
+                  day: 'numeric',
+                  year: 'numeric',
+                  timeZone: 'UTC'
+                })}
+              </span>
             </div>
             <div class="divider"></div>
             <div class="local-time">
@@ -111,25 +138,30 @@ const jsonLd = {
         </div>
       </div>
     </div>
+        )}
     
     <ul class="space-y-10 sm:space-y-14">
-      {gatherings.map((gathering, index) => (
-        <li class="gathering-item reveal flex items-start">
-          <div class="w-1 bg-wmg-gold mr-4 sm:mr-6 flex-shrink-0" style="min-height: 60px;"></div>
+      {gatherings.map((gathering, index) => {
+        const meetingDateTime = new Date(`${gathering.date}T${gathering.endTime}:00Z`);
+        const isPast = meetingDateTime <= now;
+        return (
+        <li class={`gathering-item reveal flex items-start ${isPast ? 'opacity-50' : ''}`}>
+          <div class={`w-1 mr-4 sm:mr-6 flex-shrink-0 ${isPast ? 'bg-wmg-gold/40' : 'bg-wmg-gold'}`} style="min-height: 60px;"></div>
           <div class="flex-1">
-            <div class="text-wmg-gold text-sm sm:text-base font-semibold mb-2">
+            <div class={`text-sm sm:text-base font-semibold mb-2 ${isPast ? 'text-wmg-gold/60' : 'text-wmg-gold'}`}>
               {new Date(gathering.date).toLocaleDateString('en-US', { 
                 month: 'long', 
                 day: 'numeric',
                 year: 'numeric'
               })}
             </div>
-            <h3 class="font-bold text-wmg-text leading-tight" style="font-size: 33px;">
+            <h3 class={`font-bold leading-tight ${isPast ? 'text-wmg-text/60' : 'text-wmg-text'}`} style="font-size: 33px;">
               {gathering.title}
             </h3>
           </div>
         </li>
-      ))}
+        );
+      })}
     </ul>
   </div>
 </section>
@@ -139,8 +171,24 @@ const jsonLd = {
     <script>
       // Time widget functionality
       function initTimeWidget() {
-        // Meeting date: October 28, 2025 at 4:00 PM UTC
-        const meetingDate = new Date('2025-10-28T16:00:00Z');
+        // Get next meeting data from the widget element
+        const widgetElement = document.querySelector('.custom-time-widget');
+        if (!widgetElement) {
+          console.error('Time widget element not found');
+          return;
+        }
+        
+        const meetingDateStr = widgetElement.getAttribute('data-next-meeting-date');
+        const meetingTimeStr = widgetElement.getAttribute('data-next-meeting-time');
+        const meetingEndTimeStr = widgetElement.getAttribute('data-next-meeting-end-time');
+        
+        if (!meetingDateStr || !meetingTimeStr || !meetingEndTimeStr) {
+          console.error('Next meeting data not found');
+          return;
+        }
+        
+        // Create meeting date in UTC
+        const meetingDate = new Date(`${meetingDateStr}T${meetingTimeStr}:00Z`);
         
         // Cache for timezone info
         let detectedTimezone: string | null = null;
@@ -208,24 +256,24 @@ const jsonLd = {
           const now = new Date();
           
           // Create meeting times as UTC dates - these are the source times
-          const meetingStartUTC = new Date('2025-10-28T16:00:00.000Z');
-          const meetingEndUTC = new Date('2025-10-28T17:30:00.000Z');
+          const meetingStartUTC = new Date(`${meetingDateStr}T${meetingTimeStr}:00.000Z`);
+          const meetingEndUTC = new Date(`${meetingDateStr}T${meetingEndTimeStr}:00.000Z`);
           
           // Use detected timezone or browser timezone
           const timezone = detectedTimezone || Intl.DateTimeFormat().resolvedOptions().timeZone;
           
           // Convert to local time using the detected timezone
           const localStartTimeString = meetingStartUTC.toLocaleTimeString('en-US', {
-            hour: '2-digit',
+            hour: 'numeric',
             minute: '2-digit',
-            hour12: false,
+            hour12: true,
             timeZone: timezone
           });
           
           const localEndTimeString = meetingEndUTC.toLocaleTimeString('en-US', {
-            hour: '2-digit',
+            hour: 'numeric',
             minute: '2-digit',
-            hour12: false,
+            hour12: true,
             timeZone: timezone
           });
           
@@ -242,7 +290,7 @@ const jsonLd = {
           const localDateElement = document.getElementById('local-date');
           
           console.log('Timezone conversion:', {
-            utcTime: '16:00-17:30',
+            utcTime: `${meetingTimeStr}-${meetingEndTimeStr}`,
             localStartTimeString,
             localEndTimeString,
             localDateString,
