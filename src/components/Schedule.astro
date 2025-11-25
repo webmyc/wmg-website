@@ -28,12 +28,13 @@ const gatherings = [
   }
 ];
 
-// Calculate next upcoming meeting (treat meetings as upcoming until they fully end)
+// Calculate next upcoming meeting by START time (server-side fallback)
+// Client-side script will update this dynamically
 const now = new Date();
 const nextMeeting = gatherings.find((gathering) => {
-  const meetingEndDateTime = new Date(`${gathering.date}T${gathering.endTime}:00Z`);
-  return meetingEndDateTime > now;
-});
+  const meetingStartDateTime = new Date(`${gathering.date}T${gathering.time}:00Z`);
+  return meetingStartDateTime >= now;
+}) || gatherings[0]; // Fallback to first meeting if all have started
 
 const jsonLd = {
   "@context": "https://schema.org",
@@ -223,11 +224,14 @@ const jsonLd = {
           if (!meetingsData.length) return;
           
           const now = new Date();
+          // Find next meeting by START time (not end time)
+          // A meeting is "next" if its start time hasn't passed yet
           let next = meetingsData.find((meeting) => {
-            const meetingEnd = new Date(`${meeting.date}T${meeting.endTime}:00Z`);
-            return meetingEnd > now;
+            const meetingStart = new Date(`${meeting.date}T${meeting.time}:00Z`);
+            return meetingStart >= now;
           });
           
+          // If all meetings have started, show the last one
           if (!next) {
             next = meetingsData[meetingsData.length - 1];
           }
@@ -359,8 +363,10 @@ const jsonLd = {
         }
         
         async function initializeWidget() {
-          await detectTimezoneFromIP();
+          // Update meeting state immediately (synchronous)
           updateMeetingState();
+          // Then detect timezone and update display
+          await detectTimezoneFromIP();
           updateTimeDisplay();
         }
         
