@@ -180,14 +180,32 @@ const jsonLd = {
         }
         
         const meetingsDataElement = document.getElementById('meetings-data');
-        const meetingsData = meetingsDataElement ? JSON.parse(meetingsDataElement.textContent || '[]') : [];
+        if (!meetingsDataElement) {
+          console.error('Meetings data element not found');
+          return;
+        }
+        
+        let meetingsData;
+        try {
+          meetingsData = JSON.parse(meetingsDataElement.textContent || '[]');
+        } catch (e) {
+          console.error('Failed to parse meetings data:', e);
+          return;
+        }
+        
+        if (!meetingsData || meetingsData.length === 0) {
+          console.error('No meetings data available');
+          return;
+        }
+        
+        console.log('Meetings data loaded:', meetingsData);
         
         let meetingDateStr = widgetElement.getAttribute('data-next-meeting-date');
         let meetingTimeStr = widgetElement.getAttribute('data-next-meeting-time');
         let meetingEndTimeStr = widgetElement.getAttribute('data-next-meeting-end-time');
         
         if (!meetingDateStr || !meetingTimeStr || !meetingEndTimeStr) {
-          console.error('Next meeting data not found');
+          console.error('Next meeting data not found in widget attributes');
           return;
         }
         
@@ -221,31 +239,50 @@ const jsonLd = {
         }
         
         function updateMeetingState() {
-          if (!meetingsData.length) return;
+          if (!meetingsData || meetingsData.length === 0) {
+            console.error('No meetings data in updateMeetingState');
+            return;
+          }
           
           const now = new Date();
+          console.log('Current time:', now.toISOString());
+          
           // Find next meeting by START time (not end time)
           // A meeting is "next" if its start time hasn't passed yet
-          let next = meetingsData.find((meeting) => {
+          let next = null;
+          for (const meeting of meetingsData) {
             const meetingStart = new Date(`${meeting.date}T${meeting.time}:00Z`);
-            return meetingStart >= now;
-          });
+            console.log(`Checking meeting ${meeting.date}: start=${meetingStart.toISOString()}, now=${now.toISOString()}, isFuture=${meetingStart > now}`);
+            if (meetingStart > now) {
+              next = meeting;
+              break;
+            }
+          }
           
           // If all meetings have started, show the last one
           if (!next) {
+            console.log('All meetings have started, using last meeting');
             next = meetingsData[meetingsData.length - 1];
           }
           
+          console.log('Next meeting found:', next);
+          
           const nextKey = `${next.date}-${next.time}`;
           if (nextKey !== currentMeetingKey) {
+            console.log('Updating meeting from', currentMeetingKey, 'to', nextKey);
             applyMeetingData(next);
           }
           
+          // Update past meeting classes
           document.querySelectorAll('.gathering-item').forEach((item) => {
             const endISO = item.getAttribute('data-meeting-end');
-            if (!endISO) return;
+            if (!endISO) {
+              console.warn('Meeting item missing data-meeting-end attribute');
+              return;
+            }
             const endDate = new Date(endISO);
-            if (endDate <= now) {
+            const isPast = endDate <= now;
+            if (isPast) {
               item.classList.add('past-meeting');
             } else {
               item.classList.remove('past-meeting');
@@ -339,44 +376,53 @@ const jsonLd = {
             localDateElement.textContent = localDateString;
           }
       
-          const timeDiff = meetingDate.getTime() - now.getTime();
-          
-          if (timeDiff > 0) {
-            const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
-            
-            const daysElement = document.getElementById('countdown-days');
-            const hoursElement = document.getElementById('countdown-hours');
-            const minutesElement = document.getElementById('countdown-minutes');
-            
-            if (daysElement) daysElement.textContent = days.toString();
-            if (hoursElement) hoursElement.textContent = hours.toString();
-            if (minutesElement) minutesElement.textContent = minutes.toString();
-          } else {
-            const daysElement = document.getElementById('countdown-days');
-            const detailsElement = document.getElementById('countdown-details');
-            
-            if (daysElement) daysElement.textContent = '0';
-            if (detailsElement) detailsElement.textContent = 'Meeting has started';
-          }
-        }
+      const timeDiff = meetingDate.getTime() - now.getTime();
+      
+      if (timeDiff > 0) {
+        const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
         
+        const daysElement = document.getElementById('countdown-days');
+        const hoursElement = document.getElementById('countdown-hours');
+        const minutesElement = document.getElementById('countdown-minutes');
+        
+        if (daysElement) daysElement.textContent = days.toString();
+        if (hoursElement) hoursElement.textContent = hours.toString();
+        if (minutesElement) minutesElement.textContent = minutes.toString();
+      } else {
+        const daysElement = document.getElementById('countdown-days');
+        const detailsElement = document.getElementById('countdown-details');
+        
+        if (daysElement) daysElement.textContent = '0';
+        if (detailsElement) detailsElement.textContent = 'Meeting has started';
+      }
+    }
+    
         async function initializeWidget() {
-          // Update meeting state immediately (synchronous)
+          console.log('Initializing widget...');
+          // Update meeting state immediately (synchronous) - this is critical
           updateMeetingState();
           // Then detect timezone and update display
           await detectTimezoneFromIP();
           updateTimeDisplay();
+          console.log('Widget initialized');
         }
         
+        // Run immediately, don't wait for DOMContentLoaded
         if (document.readyState === 'loading') {
-          document.addEventListener('DOMContentLoaded', initializeWidget);
+          document.addEventListener('DOMContentLoaded', () => {
+            console.log('DOM loaded, initializing widget');
+            initializeWidget();
+          });
         } else {
+          console.log('DOM already loaded, initializing widget immediately');
           initializeWidget();
         }
         
+        // Update every minute
         setInterval(() => {
+          console.log('Periodic update');
           updateMeetingState();
           updateTimeDisplay();
         }, 60000);
@@ -387,7 +433,7 @@ const jsonLd = {
       } else {
         initTimeWidget();
       }
-    </script>
+</script>
 
 <style>
   /* Organic floating animations */
